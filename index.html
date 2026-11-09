@@ -24,10 +24,10 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);overflow-x:hi
 a{color:inherit}
 .wrap{width:min(1180px,92vw);margin:0 auto}
 section{position:relative;padding:96px 0}
-h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.08}
+h1,h2,h3{font-weight:600;letter-spacing:-.02em;line-height:1.08}
 h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:14px}
 .sub{color:var(--dim);font-size:1.06rem;max-width:640px}
-.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:var(--cyan);margin-bottom:16px}
 .kicker::before{content:"";width:26px;height:1px;background:var(--grad)}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* background fx */
@@ -40,7 +40,7 @@ h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:14px}
 nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,7,13,.62);border-bottom:1px solid transparent;transition:border-color .3s}
 nav.scrolled{border-bottom-color:var(--line)}
 .nav-in{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;gap:26px;height:64px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.12rem;text-decoration:none;letter-spacing:-.01em}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:1.12rem;text-decoration:none;letter-spacing:-.01em}
 .logo svg{width:28px;height:28px}
 .nav-links{display:flex;gap:22px;margin-left:auto}
 .nav-links a{color:var(--dim);text-decoration:none;font-size:.9rem;transition:color .2s;position:relative}
@@ -54,10 +54,10 @@ nav.scrolled{border-bottom-color:var(--line)}
 /* hero */
 #hero{min-height:100svh;display:flex;align-items:center;padding-top:120px;position:relative;overflow:hidden}
 .hero-in{position:relative}
-.badge{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:99px;border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.08);font-family:var(--mono);font-size:.76rem;color:var(--amber);margin-bottom:26px}
+.badge{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:99px;border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.08);font-family:var(--mono);font-size:.76rem;letter-spacing:.02em;color:var(--amber);margin-bottom:26px}
 .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1.6s infinite}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,180,84,.5)}50%{opacity:.55;box-shadow:0 0 0 7px rgba(255,180,84,0)}}
-h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.045em}
+h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.03em}
 h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(53,224,255,.35))}
 .hero-sub{margin:22px 0 8px;font-size:clamp(1.05rem,2.1vw,1.35rem);color:var(--dim);max-width:620px;min-height:2.4em}
 .hero-sub b{color:var(--ink);font-weight:600}
@@ -74,14 +74,25 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .grid{display:grid;gap:18px}
 .g3{grid-template-columns:repeat(3,1fr)}
 .g2{grid-template-columns:repeat(2,1fr)}
-.card{position:relative;padding:26px;border-radius:18px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);transition:transform .25s,border-color .25s,box-shadow .3s;transform-style:preserve-3d;overflow:hidden}
+.card{position:relative;padding:26px;border-radius:18px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);transition:transform .25s,border-color .25s,box-shadow .3s;transform-style:preserve-3d;overflow:hidden}
 .card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(53,224,255,.09),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
 .card:hover::before{opacity:1}
-.card:hover{border-color:rgba(53,224,255,.38);box-shadow:0 18px 46px -18px rgba(0,0,0,.8)}
+.card:hover{border-color:rgba(53,224,255,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 18px 46px -18px rgba(0,0,0,.8)}
+.btn:active{filter:brightness(1.12)}
+.log li{transition:background .18s cubic-bezier(.22,1,.36,1)}
+.log li:hover{background:rgba(53,224,255,.04)}
+.log li:hover time{color:#7dedff}
+.layer{transition:border-color .2s cubic-bezier(.22,1,.36,1),background .2s cubic-bezier(.22,1,.36,1)}
+.layer:hover{border-color:rgba(53,224,255,.35);background:rgba(20,30,56,.7)}
+.faq summary{transition:background .18s cubic-bezier(.22,1,.36,1)}
+.faq summary:hover{background:rgba(53,224,255,.04)}
+.metric{transition:border-color .2s cubic-bezier(.22,1,.36,1),background .2s cubic-bezier(.22,1,.36,1)}
+.metric:hover{border-color:rgba(53,224,255,.45);border-style:solid;background:rgba(20,30,56,.4)}
+.faq details,.log,.layer{box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 .card .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(53,224,255,.1);border:1px solid rgba(53,224,255,.25);margin-bottom:16px}
 .card h3{font-size:1.14rem;margin-bottom:8px}
 .card p{color:var(--dim);font-size:.93rem}
-.tag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.tag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.04em;padding:3px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
 .tag.plan{border:1px solid rgba(45,212,191,.5);color:#99f6e4;background:rgba(45,212,191,.12)}
 .tag.live{border:1px solid rgba(61,220,151,.5);color:var(--green);background:rgba(61,220,151,.1)}
 .tag.road{border:1px solid rgba(142,162,200,.4);color:var(--dim)}
@@ -90,7 +101,7 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .layer{display:flex;align-items:center;gap:18px;padding:18px 22px;border:1px solid var(--line);background:var(--panel);border-radius:14px;position:relative}
 .layer+.layer{margin-top:26px}
 .layer+.layer::before{content:"";position:absolute;top:-27px;left:44px;width:2px;height:26px;background:linear-gradient(var(--cyan),var(--violet));opacity:.6}
-.layer .ln{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.14em;width:78px;flex:none}
+.layer .ln{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.02em;width:78px;flex:none}
 .layer h4{font-size:1rem}
 .layer p{color:var(--dim);font-size:.85rem}
 /* perf */
@@ -125,7 +136,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 .foot a{color:var(--dim);text-decoration:none;margin-left:18px}
 .foot a:hover{color:var(--ink)}
 /* reveal */
-.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
 .rv.on{opacity:1;transform:none}
 /* sound toggle */
 #sndBtn{position:fixed;bottom:20px;right:20px;z-index:55;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(10,15,28,.8);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
@@ -162,10 +173,9 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 @keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-38px,22px)}50%{transform:translate(24px,-30px)}75%{transform:translate(-16px,-14px)}100%{transform:translate(0,0)}}
 @media (prefers-reduced-motion:reduce){.fx-grain{animation:none}}
 .ticker:hover .ticker-track{animation-play-state:paused}
-.faq details[open] .fa-body{animation:faIn .38s cubic-bezier(.2,.7,.3,1)}
+.faq details[open] .fa-body{animation:faIn .38s cubic-bezier(.22,1,.36,1)}
 @keyframes faIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-.log li:last-child time::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff9a3c;margin-right:7px;vertical-align:1px;animation:pulseDot 2.2s ease-in-out infinite}
-@keyframes pulseDot{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,154,60,.5)}50%{opacity:.55;box-shadow:0 0 0 5px rgba(255,154,60,0)}}
+.log li:last-child time::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff9a3c;margin-right:7px;vertical-align:1px}
 .copy-btn{align-self:flex-start;margin-top:2px;background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.35);color:var(--cyan);font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;padding:6px 12px;border-radius:8px;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
 .copy-btn:hover{background:rgba(45,212,191,.16)}
 .copy-btn.copied{border-color:#34d399;color:#34d399}
@@ -202,7 +212,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="glow-orb" style="width:520px;height:520px;background:#ff9a3c;top:-140px;left:-160px"></div>
   <div class="glow-orb" style="width:460px;height:460px;background:#c2481d;bottom:-120px;right:-120px"></div>
   <div class="wrap hero-in">
-    <span class="badge"><span class="dot"></span>ACTIVE DEVELOPMENT - PREVIEW BUILD PUBLISHED, RUNTIME CHECKS PENDING</span>
+    <span class="badge"><span class="dot"></span>Active development - preview build published, runtime checks pending</span>
     <h1>wa<span class="x">X</span> VPN</h1>
     <p class="hero-sub" id="scramble" data-text="A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.">A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.</p>
     <div class="hero-cta">
@@ -213,10 +223,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <a class="btn" href="#arch">See the architecture</a>
     </div>
     <div class="hero-meta">
-      <div><b>Rust</b>LANGUAGE</div>
-      <div><b>WireGuard</b>PROTOCOL</div>
-      <div><b>Windows</b>PLATFORM</div>
-      <div><b>WARP</b>OPT-IN, IN DEVELOPMENT</div>
+      <div><b>Rust</b>Language</div>
+      <div><b>WireGuard</b>Protocol</div>
+      <div><b>Windows</b>Platform</div>
+      <div><b>WARP</b>Opt-in, in development</div>
     </div>
   </div>
 </section>
@@ -256,7 +266,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="wrap">
     <span class="kicker rv">Architecture</span>
     <h2 class="rv">Four crates, one tunnel.</h2>
-    <p class="sub rv">The planned workspace layout. Each layer is a separate Rust crate with a single job. <span class="tag plan">PLANNED</span></p>
+    <p class="sub rv">The planned workspace layout. Each layer is a separate Rust crate with a single job. <span class="tag plan">Planned</span></p>
     <div class="arch">
       <div class="layer rv"><span class="ln">wax-app</span><div><h4>Interface - egui native GUI</h4><p>Animated immediate-mode desktop interface written entirely in Rust. No WebView, no browser engine bundled.</p></div></div>
       <div class="layer rv"><span class="ln">wax-core</span><div><h4>Profiles and keys</h4><p>WireGuard config parsing, key generation and profile storage.</p></div></div>
@@ -272,12 +282,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <h2 class="rv">Honest labels, no vaporware.</h2>
     <p class="sub rv">The target feature set. Items marked roadmap are not in the app yet - this page updates as each one lands and is tested.</p>
     <div class="grid g3" style="margin-top:40px">
-      <div class="card rv"><h3>Profiles and keys<span class="tag plan">PLANNED</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place.</p></div>
-      <div class="card rv"><h3>One-click connect<span class="tag plan">PLANNED</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI.</p></div>
-      <div class="card rv"><h3>WARP profiles<span class="tag plan">OPT-IN</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on.</p></div>
-      <div class="card rv"><h3>Kill switch<span class="tag road">ROADMAP</span></h3><p>Block traffic if the tunnel drops. On the roadmap, implemented and tested incrementally.</p></div>
-      <div class="card rv"><h3>DNS control<span class="tag road">ROADMAP</span></h3><p>Per-profile DNS pushed through the tunnel. Planned, not shipped.</p></div>
-      <div class="card rv"><h3>Tray and autostart<span class="tag road">ROADMAP</span></h3><p>Live in the system tray, start with Windows if you want it to. Planned, not shipped.</p></div>
+      <div class="card rv"><h3>Profiles and keys<span class="tag plan">Planned</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place.</p></div>
+      <div class="card rv"><h3>One-click connect<span class="tag plan">Planned</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI.</p></div>
+      <div class="card rv"><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on.</p></div>
+      <div class="card rv"><h3>Kill switch<span class="tag road">Roadmap</span></h3><p>Block traffic if the tunnel drops. On the roadmap, implemented and tested incrementally.</p></div>
+      <div class="card rv"><h3>DNS control<span class="tag road">Roadmap</span></h3><p>Per-profile DNS pushed through the tunnel. Planned, not shipped.</p></div>
+      <div class="card rv"><h3>Tray and autostart<span class="tag road">Roadmap</span></h3><p>Live in the system tray, start with Windows if you want it to. Planned, not shipped.</p></div>
     </div>
   </div>
 </section>
@@ -317,7 +327,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 00:24 IST</time><span>First live tunnel result: a real WireGuard handshake against the demo server passed in CI - moving byte counters, adapter up, tunnel DNS applied, and clean disconnect with DNS/firewall state restored. <em>This does not yet prove general through-tunnel traffic, IPv6, kill-switch or crash safety, or a GUI-driven connection.</em></span></li>
         <li><time>Nov 10, 00:28 IST</time><span>A newer candidate build exists: <a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.13" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.13</a> (same commit as the handshake test above). It carries the WARP decoder fix and the rebuilt UI; the installer checksum was re-verified against a downloaded copy, and the handshake and DNS-cleanup test ran against this exact binary. <em>Installer launch, data path, GUI-driven connect, kill-switch/crash safety, IPv6 and CLI persistence remain unverified - it does not replace preview.6 as the linked download below.</em></span></li>
         <li><time>Nov 10, 00:41 IST</time><span>Candidate <a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.19" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.19</a> passed a deeper CI leg: handshake plus a real ping through the tunnel to the demo server's tunnel address (first through-tunnel data-path proof), DNS setup and graceful restoration, and an explicit kill-switch leg - four blocking rules present while connected, removed on disconnect. <em>Rule presence is not a traffic-blocking/leak test. Simulated-crash behavior is still being clarified - no automatic crash-recovery claim. The console-popup fix is in code but a popup-free GUI connect is not visually confirmed; tray/background running and the app icon are known gaps. Not promoted; preview.6 stays linked below.</em></span></li>
-        <li><time>Next</time><span><em>Remaining: effective kill-switch leak/blocking test, crash-behavior clarification, GUI-driven connect with zero-popup confirmation, tray/background lifecycle, app icon, installer launch. The download stays labelled preview until those pass.</em></span></li>
+        <li><time>Nov 10, 00:44 IST</time><span>Crash-leg clarified: after the tunnel owner process was killed mid-connection, the test harness ran a manual <span style="font-family:var(--mono)">wax disconnect</span> and only then verified DNS/firewall cleanup - that proves the manual recovery command works after a crash, <em>not</em> automatic crash restoration (what Windows reclaims on its own is being instrumented now). Tray/background lifecycle and the embedded exe icon are written (source 099faa0) and awaiting their first Windows compile - <em>no runtime claim yet.</em></span></li>
+        <li><time>Next</time><span><em>Remaining: what Windows reclaims automatically after a crash, kill-switch leak/blocking test, GUI-driven connect with zero-popup confirmation, tray/icon first compile and runtime check, installer launch. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
     <div class="dl rv" style="margin-top:26px">
@@ -357,7 +368,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 <footer>
   <div class="wrap foot">
-    <span>waX VPN - a WireGuard client for Windows, written in Rust. Built in the open.</span>
+    <span>waX VPN - a WireGuard client for Windows, written in Rust. Built in the open.<br><span style="font-size:.74rem;opacity:.75">Design refined with <a href="https://github.com/heydamir/unslop" target="_blank" rel="noopener" style="margin-left:0">unslop</a> by Damir Sokolovsky (<a href="https://x.com/heydamir" target="_blank" rel="noopener" style="margin-left:0">@heydamir</a>), CC BY 4.0.</span></span>
     <span>
       <a href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">Repo</a>
       <a href="https://github.com/vio137/wax-vpn/releases" target="_blank" rel="noopener">Releases</a>
