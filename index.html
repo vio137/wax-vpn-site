@@ -92,8 +92,6 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .layer:hover{border-color:rgba(53,224,255,.35);background:rgba(20,30,56,.7)}
 .faq summary{transition:background .18s cubic-bezier(.22,1,.36,1)}
 .faq summary:hover{background:rgba(53,224,255,.04)}
-.metric{transition:border-color .2s cubic-bezier(.22,1,.36,1),background .2s cubic-bezier(.22,1,.36,1)}
-.metric:hover{border-color:rgba(53,224,255,.45);border-style:solid;background:rgba(20,30,56,.4)}
 .faq details,.log,.layer{box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
 .card .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(53,224,255,.1);border:1px solid rgba(53,224,255,.25);margin-bottom:16px}
 .card h3{font-size:1.14rem;margin-bottom:8px}
@@ -114,10 +112,13 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .layer h4{font-size:1rem}
 .layer p{color:var(--dim);font-size:.85rem}
 /* perf */
-.perf-band{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px}
-.metric{padding:22px;border-radius:16px;border:1px dashed rgba(142,162,200,.3);text-align:center}
-.metric b{display:block;font-size:1.7rem;font-family:var(--mono);color:var(--dim)}
-.metric span{font-size:.8rem;color:var(--dim)}
+.bench{margin-top:34px;border:1px solid var(--line);border-radius:16px;background:var(--panel);backdrop-filter:blur(14px);overflow:hidden}
+.bench-row{display:grid;grid-template-columns:170px 130px 1fr;gap:18px;align-items:baseline;padding:17px 22px;border-top:1px solid var(--line)}
+.bench-row:first-of-type{border-top:none}
+.bench-name{font-weight:600;font-size:.98rem}
+.bench-val{font-family:var(--mono);font-size:.9rem;color:var(--dim)}
+.bench-val.ok{color:var(--green)}
+.bench-note{color:var(--dim);font-size:.84rem;line-height:1.5}
 /* status log */
 .log{margin-top:26px;border:1px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden}
 .log-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.78rem;color:var(--dim)}
@@ -174,7 +175,8 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 .spec-row h3{font-size:1.14rem;margin:0 0 9px;letter-spacing:-.01em;font-weight:600}
 .spec-row p{color:var(--dim);font-size:.94rem;line-height:1.62;margin:0;max-width:58ch}
 @media(max-width:900px){
-  .g3,.perf-band{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(2,1fr)}
+  .bench-row{grid-template-columns:130px 110px 1fr;gap:12px}
   .g2{grid-template-columns:1fr}
   .spec{grid-template-columns:1fr;gap:26px}
   .spec-side{position:static}
@@ -184,7 +186,8 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
   #cursor{display:none}
 }
 @media(max-width:560px){
-  .g3,.perf-band{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr}
+  .bench-row{grid-template-columns:1fr;gap:3px;padding:15px 18px}
   .log time{width:88px}
   h1{font-size:3rem}
 }
@@ -344,11 +347,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <span class="kicker rv">Performance</span>
     <h2 class="rv">Efficient by design.<br><span class="grad-text">Proven by measurement.</span></h2>
     <p class="sub rv">Rust and a kernel driver are chosen to keep CPU and memory cost low. But no numbers are claimed here until they are measured on real Windows hardware - benchmarks will be published with releases.</p>
-    <div class="perf-band">
-      <div class="metric rv"><b>-</b><span>Memory use<br>measured at release</span></div>
-      <div class="metric rv"><b>-</b><span>Idle CPU<br>measured at release</span></div>
-      <div class="metric rv"><b>-</b><span>Throughput<br>measured at release</span></div>
-      <div class="metric rv"><b>9.5 MB</b><span>Installer size<br>v0.1.0-preview.6</span></div>
+    <div class="bench rv">
+      <div class="log-head"><span class="dots"><i></i><i></i><i></i></span>wax-vpn / bench.log</div>
+      <div class="bench-row"><span class="bench-name">Memory use</span><span class="bench-val">pending</span><span class="bench-note">measured on real Windows hardware at release, not estimated</span></div>
+      <div class="bench-row"><span class="bench-name">Idle CPU</span><span class="bench-val">pending</span><span class="bench-note">measured on real Windows hardware at release, not estimated</span></div>
+      <div class="bench-row"><span class="bench-name">Throughput</span><span class="bench-val">pending</span><span class="bench-note">measured on real Windows hardware at release, not estimated</span></div>
+      <div class="bench-row"><span class="bench-name">Installer size</span><span class="bench-val ok">9.5 MB</span><span class="bench-note">v0.1.0-preview.6 - the one number on this page that is already measured</span></div>
     </div>
   </div>
 </section>
@@ -380,7 +384,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 01:18 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.23" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.23</a> adds the profile picker and a first auto-reconnect, and produced the first GUI-driven runtime result: clicking Connect in the app achieved a WireGuard handshake. No console windows were observed during the connect at 100ms polling - shorter flashes could be missed. Closing the window left the process and adapter alive; Quit and reopen behavior are not verified yet. <em>The reconnect v1 in this build has known safety/cleanup issues with corrections in source, unverified - published, not recommended. The glass styling pass (preview.22 onward) is subtle styling over the same basic layout, not a redesign. preview.6 stays linked below.</em></span></li>
         <li><time>Nov 10, 01:30 IST</time><span>v0.1.0-preview.24 (auto-reconnect v2 + cleanup reporting) published. Its GUI legs passed - connect, close-to-tray, and the 100ms console-window observation. One failure: the final cleanup command exited 1 - new error aggregation surfaced a previously-swallowed DNS-reset error after Windows had already reclaimed the adapter, not a verified new regression in DNS restore. A fix (8248036) treats a missing adapter as already-clean. <em>Corrections unverified; published, not recommended. preview.6 stays linked below.</em></span></li>
         <li><time>Nov 10, 01:38 IST</time><span>v0.1.0-preview.25 (native Gargantua GUI layout) published. The new in-app layout is a substantial visual rebuild - rendered and inspected via screenshot - but the GUI click leg went unexercised this run: the test locator mismatched an accessible label. Tunnel legs pass. The green CI job also incorrectly allowed FAIL lines through; that gate is fixed for the next build. Earlier per-leg passes on .23/.24 are being reconciled against result records, not invalidated. <em>Published, not recommended pending preview.26. preview.6 stays linked below.</em></span></li>
-        <li><time>Next</time><span><em>Remaining: preview.26's evidence (UIA locator fix, the first exercised GUI click on the Gargantua layout); reconciling the per-leg results of previews .23/.24 against their result records; Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch; a live WARP test against Cloudflare. The download stays labelled preview until those pass.</em></span></li>
+        <li><time>Nov 10, 01:43 IST</time><span>GUI-leg reconciliation done against the actual verify-result artifacts: previews .23 and .24 literally passed - click-driven WireGuard handshake, window close leaving the process and adapter alive, and the 100ms console-window observation - with tray Quit recorded only as a WARN. preview.25's Connect-locator miss is a separate, later failure; the locator fix ships in preview.26.</span></li>
+        <li><time>Next</time><span><em>Remaining: preview.26's evidence (UIA locator fix, the first exercised GUI click on the Gargantua layout); Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch; a live WARP test against Cloudflare. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
     <div class="dl rv" style="margin-top:26px">
@@ -456,10 +461,23 @@ document.querySelectorAll("section[id]").forEach(function(s){ secObs.observe(s);
 /* ---- reveal on scroll ---- */
 var io = new IntersectionObserver(function(es){
   es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); } });
-},{threshold:.12, rootMargin:"0px 0px -6% 0px"});
+},{threshold:0, rootMargin:"0px 0px -4% 0px"});
 document.querySelectorAll(".rv").forEach(function(el){
   if(reduced){ el.classList.add("on"); } else { io.observe(el); }
 });
+/* readability guarantee: any revealed-element still hidden inside the viewport after
+   a settle window is force-shown - content never stays dim at a settled scroll position */
+function rvSweep(){
+  var vh = window.innerHeight;
+  document.querySelectorAll(".rv:not(.on)").forEach(function(el){
+    var r = el.getBoundingClientRect();
+    if(r.top < vh*0.96 && r.bottom > 0){ el.classList.add("on"); io.unobserve(el); }
+  });
+}
+setTimeout(rvSweep, 900);
+window.addEventListener("load", function(){ setTimeout(rvSweep, 400); setTimeout(rvSweep, 1600); });
+var rvScrollT = null;
+window.addEventListener("scroll", function(){ if(rvScrollT) return; rvScrollT = setTimeout(function(){ rvScrollT = null; rvSweep(); }, 500); }, {passive:true});
 
 /* ---- ticker: duplicate content for seamless loop ---- */
 var tick = document.getElementById("tickerTrack");
