@@ -165,9 +165,19 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 #menuPanel a:last-child{border-bottom:none}
 #menuPanel a:hover{color:var(--cyan)}
 #menuPanel.open a{opacity:1;transform:none}
+.spec{display:grid;grid-template-columns:minmax(280px,400px) 1fr;gap:70px;align-items:start}
+.spec-side{position:sticky;top:120px}
+.spec-list{border-top:1px solid var(--line)}
+.spec-row{display:grid;grid-template-columns:54px 1fr;gap:20px;padding:26px 6px;border-bottom:1px solid var(--line);transition:background .25s}
+.spec-row:hover{background:rgba(53,224,255,.035)}
+.spec-idx{font-family:var(--mono);font-size:.78rem;color:var(--cyan);opacity:.7;padding-top:5px}
+.spec-row h3{font-size:1.14rem;margin:0 0 9px;letter-spacing:-.01em;font-weight:600}
+.spec-row p{color:var(--dim);font-size:.94rem;line-height:1.62;margin:0;max-width:58ch}
 @media(max-width:900px){
   .g3,.perf-band{grid-template-columns:repeat(2,1fr)}
   .g2{grid-template-columns:1fr}
+  .spec{grid-template-columns:1fr;gap:26px}
+  .spec-side{position:static}
   .nav-links{display:none}
   #menuBtn{display:flex}
   section{padding:70px 0}
@@ -311,16 +321,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 <section id="features">
   <div class="wrap">
-    <span class="kicker rv">Features</span>
-    <h2 class="rv">Honest labels, no vaporware.</h2>
-    <p class="sub rv">The feature set as it actually stands: what is in the current preview builds, what is opt-in, and what is still roadmap. This page updates as each one lands and is tested.</p>
-    <div class="grid g3" style="margin-top:40px">
-      <div class="card rv"><h3>Profiles and keys<span class="tag live">In preview</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place. Profile picker included in the current preview.</p></div>
-      <div class="card rv"><h3>One-click connect<span class="tag live">In preview</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI. A GUI-driven connect passed a real handshake in CI.</p></div>
-      <div class="card rv"><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on. Not yet exercised live against Cloudflare.</p></div>
-      <div class="card rv"><h3>Kill switch<span class="tag live">In preview</span></h3><p>Firewall rules engage on connect and release on disconnect - rule presence verified in CI, including after a crashed owner process. A live traffic-blocking (leak) test is still outstanding.</p></div>
-      <div class="card rv"><h3>DNS control<span class="tag live">In preview</span></h3><p>Tunnel DNS is applied on connect and restored on disconnect - verified in CI. A surfaced error when the adapter is already gone was fixed in source.</p></div>
-      <div class="card rv"><h3>System tray<span class="tag live">In preview</span></h3><p>Close to the tray and keep the tunnel running - exercised in the CI GUI leg. Tray Quit is not verified yet; start-with-Windows autostart is on the roadmap.</p></div>
+    <div class="spec">
+      <div class="spec-side">
+        <span class="kicker rv">Features</span>
+        <h2 class="rv">Honest labels,<br>no vaporware.</h2>
+        <p class="sub rv">The feature set as it actually stands: what is in the current preview builds, what is opt-in, and what is still roadmap. This page updates as each one lands and is tested.</p>
+      </div>
+      <div class="spec-list rv">
+        <div class="spec-row"><span class="spec-idx">01</span><div><h3>Profiles and keys<span class="tag live">In preview</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place. Profile picker included in the current preview.</p></div></div>
+        <div class="spec-row"><span class="spec-idx">02</span><div><h3>One-click connect<span class="tag live">In preview</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI. A GUI-driven connect passed a real handshake in CI.</p></div></div>
+        <div class="spec-row"><span class="spec-idx">03</span><div><h3>Kill switch<span class="tag live">In preview</span></h3><p>Firewall rules engage on connect and release on disconnect - rule presence verified in CI, including after a crashed owner process. A live traffic-blocking (leak) test is still outstanding.</p></div></div>
+        <div class="spec-row"><span class="spec-idx">04</span><div><h3>DNS control<span class="tag live">In preview</span></h3><p>Tunnel DNS is applied on connect and restored on disconnect - verified in CI. A surfaced error when the adapter is already gone was fixed in source.</p></div></div>
+        <div class="spec-row"><span class="spec-idx">05</span><div><h3>System tray<span class="tag live">In preview</span></h3><p>Close to the tray and keep the tunnel running - exercised in the CI GUI leg. Tray Quit is not verified yet; start-with-Windows autostart is on the roadmap.</p></div></div>
+        <div class="spec-row"><span class="spec-idx">06</span><div><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on. Not yet exercised live against Cloudflare.</p></div></div>
+      </div>
     </div>
   </div>
 </section>
@@ -365,7 +379,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 01:07 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.22" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.22</a> (commit f84d4d6): tunnel tests passed, including the first crash leg with the kill switch ON - all four blocking rules were still in place after the owner process died, and explicit cleanup removed them. <em>Rule persistence is not proof that traffic was blocked; a live leak/blocking test is still outstanding.</em> The GUI interaction leg did not run at all - a PowerShell parser error in the workflow, fixed in 444a456 - so there is no fresh GUI runtime verification. Auto-reconnect and a profile switcher landed in source, pending build and runtime. Published, not promoted; preview.6 stays linked below.</span></li>
         <li><time>Nov 10, 01:18 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.23" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.23</a> adds the profile picker and a first auto-reconnect, and produced the first GUI-driven runtime result: clicking Connect in the app achieved a WireGuard handshake. No console windows were observed during the connect at 100ms polling - shorter flashes could be missed. Closing the window left the process and adapter alive; Quit and reopen behavior are not verified yet. <em>The reconnect v1 in this build has known safety/cleanup issues with corrections in source, unverified - published, not recommended. The glass styling pass (preview.22 onward) is subtle styling over the same basic layout, not a redesign. preview.6 stays linked below.</em></span></li>
         <li><time>Nov 10, 01:30 IST</time><span>v0.1.0-preview.24 (auto-reconnect v2 + cleanup reporting) published. Its GUI legs passed - connect, close-to-tray, and the 100ms console-window observation. One failure: the final cleanup command exited 1 - new error aggregation surfaced a previously-swallowed DNS-reset error after Windows had already reclaimed the adapter, not a verified new regression in DNS restore. A fix (8248036) treats a missing adapter as already-clean. <em>Corrections unverified; published, not recommended. preview.6 stays linked below.</em></span></li>
-        <li><time>Next</time><span><em>Remaining: the corrected build (DNS cleanup fix + the first from-scratch Gargantua interface increment, run 42688621370) with its runtime report; Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch. The download stays labelled preview until those pass.</em></span></li>
+        <li><time>Nov 10, 01:38 IST</time><span>v0.1.0-preview.25 (native Gargantua GUI layout) published. The new in-app layout is a substantial visual rebuild - rendered and inspected via screenshot - but the GUI click leg went unexercised this run: the test locator mismatched an accessible label. Tunnel legs pass. The green CI job also incorrectly allowed FAIL lines through; that gate is fixed for the next build. Earlier per-leg passes on .23/.24 are being reconciled against result records, not invalidated. <em>Published, not recommended pending preview.26. preview.6 stays linked below.</em></span></li>
+        <li><time>Next</time><span><em>Remaining: preview.26's evidence (UIA locator fix, the first exercised GUI click on the Gargantua layout); reconciling the per-leg results of previews .23/.24 against their result records; Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch; a live WARP test against Cloudflare. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
     <div class="dl rv" style="margin-top:26px">
