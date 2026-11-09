@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>waX VPN - WireGuard VPN client for Windows, written in Rust</title>
+<meta name="description" content="waX VPN is a WireGuard VPN client for Windows written in Rust, with built-in Cloudflare WARP (wgcf-compatible) support. In active development, built in the open.">
+<meta property="og:title" content="waX VPN">
+<meta property="og:description" content="A fast, beautiful WireGuard VPN client for Windows, written in Rust. Built in the open.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2335e0ff'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M32 4 56 14v16c0 15-10 26-24 30C18 56 8 45 8 30V14z' fill='none' stroke='url(%23g)' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='32' cy='30' r='7' fill='url(%23g)'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#05070d; --bg2:#0a0f1c; --panel:rgba(16,24,44,.55); --line:rgba(120,170,255,.14);
+  --ink:#eaf2ff; --dim:#8ea2c8; --cyan:#35e0ff; --violet:#8b5cf6; --green:#3ddc97; --amber:#ffb454;
+  --grad:linear-gradient(100deg,var(--cyan),var(--violet));
+  --font:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,Roboto,Inter,Arial,sans-serif;
+  --mono:"Cascadia Code",Consolas,"JetBrains Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);overflow-x:hidden;line-height:1.6}
+::selection{background:rgba(53,224,255,.28)}
+a{color:inherit}
+.wrap{width:min(1180px,92vw);margin:0 auto}
+section{position:relative;padding:96px 0}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em;line-height:1.08}
+h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:14px}
+.sub{color:var(--dim);font-size:1.06rem;max-width:640px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px}
+.kicker::before{content:"";width:26px;height:1px;background:var(--grad)}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* background fx */
+#tunnel{position:fixed;inset:0;width:100%;height:100%;z-index:-2;opacity:.9}
+.noise{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E")}
+.glow-orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.28;pointer-events:none}
+/* progress */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--grad);z-index:60;box-shadow:0 0 12px rgba(53,224,255,.8)}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;backdrop-filter:blur(14px);background:rgba(5,7,13,.62);border-bottom:1px solid transparent;transition:border-color .3s}
+nav.scrolled{border-bottom-color:var(--line)}
+.nav-in{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;gap:26px;height:64px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.12rem;text-decoration:none;letter-spacing:-.01em}
+.logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:22px;margin-left:auto}
+.nav-links a{color:var(--dim);text-decoration:none;font-size:.9rem;transition:color .2s;position:relative}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--grad);transition:width .25s}
+.nav-links a:hover{color:var(--ink)}.nav-links a:hover::after{width:100%}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;border-radius:12px;font-weight:700;font-size:.92rem;text-decoration:none;border:1px solid var(--line);color:var(--ink);background:rgba(20,30,56,.5);transition:transform .18s,box-shadow .25s,border-color .25s;cursor:pointer}
+.btn:hover{transform:translateY(-2px);border-color:rgba(53,224,255,.5);box-shadow:0 8px 30px -8px rgba(53,224,255,.35)}
+.btn.primary{background:var(--grad);color:#04121a;border:none}
+.btn.primary:hover{box-shadow:0 10px 34px -6px rgba(53,224,255,.55)}
+.btn.sm{padding:8px 16px;font-size:.84rem;border-radius:10px}
+/* hero */
+#hero{min-height:100svh;display:flex;align-items:center;padding-top:120px}
+.hero-in{position:relative}
+.badge{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:99px;border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.08);font-family:var(--mono);font-size:.76rem;color:var(--amber);margin-bottom:26px}
+.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,180,84,.5)}50%{opacity:.55;box-shadow:0 0 0 7px rgba(255,180,84,0)}}
+h1{font-size:clamp(3.2rem,9vw,7rem);letter-spacing:-.045em}
+h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(53,224,255,.35))}
+.hero-sub{margin:22px 0 8px;font-size:clamp(1.05rem,2.1vw,1.35rem);color:var(--dim);max-width:620px;min-height:2.4em}
+.hero-sub b{color:var(--ink);font-weight:600}
+.hero-cta{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap}
+.hero-meta{display:flex;gap:26px;margin-top:44px;flex-wrap:wrap}
+.hero-meta div{font-family:var(--mono);font-size:.78rem;color:var(--dim)}
+.hero-meta b{display:block;font-size:1.25rem;color:var(--ink);font-family:var(--font)}
+/* ticker */
+.ticker{border-block:1px solid var(--line);background:rgba(10,15,28,.6);overflow:hidden;padding:13px 0;position:relative}
+.ticker-track{display:flex;gap:44px;width:max-content;animation:tick 26s linear infinite;font-family:var(--mono);font-size:.8rem;color:var(--dim);white-space:nowrap}
+.ticker-track span b{color:var(--cyan);font-weight:400;margin-right:10px}
+@keyframes tick{to{transform:translateX(-50%)}}
+/* cards */
+.grid{display:grid;gap:18px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+.card{position:relative;padding:26px;border-radius:18px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);transition:transform .25s,border-color .25s,box-shadow .3s;transform-style:preserve-3d;overflow:hidden}
+.card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(53,224,255,.09),transparent 45%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card:hover{border-color:rgba(53,224,255,.38);box-shadow:0 18px 46px -18px rgba(0,0,0,.8)}
+.card .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:rgba(53,224,255,.1);border:1px solid rgba(53,224,255,.25);margin-bottom:16px}
+.card h3{font-size:1.14rem;margin-bottom:8px}
+.card p{color:var(--dim);font-size:.93rem}
+.tag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:99px;margin-left:8px;vertical-align:middle}
+.tag.plan{border:1px solid rgba(139,92,246,.5);color:#c4b5fd;background:rgba(139,92,246,.12)}
+.tag.live{border:1px solid rgba(61,220,151,.5);color:var(--green);background:rgba(61,220,151,.1)}
+.tag.road{border:1px solid rgba(142,162,200,.4);color:var(--dim)}
+/* arch diagram */
+.arch{margin-top:34px;display:flex;flex-direction:column;gap:0;max-width:760px}
+.layer{display:flex;align-items:center;gap:18px;padding:18px 22px;border:1px solid var(--line);background:var(--panel);border-radius:14px;position:relative}
+.layer+.layer{margin-top:26px}
+.layer+.layer::before{content:"";position:absolute;top:-27px;left:44px;width:2px;height:26px;background:linear-gradient(var(--cyan),var(--violet));opacity:.6}
+.layer .ln{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.14em;width:78px;flex:none}
+.layer h4{font-size:1rem}
+.layer p{color:var(--dim);font-size:.85rem}
+/* perf */
+.perf-band{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:30px}
+.metric{padding:22px;border-radius:16px;border:1px dashed rgba(142,162,200,.3);text-align:center}
+.metric b{display:block;font-size:1.7rem;font-family:var(--mono);color:var(--dim)}
+.metric span{font-size:.8rem;color:var(--dim)}
+/* status log */
+.log{margin-top:26px;border:1px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden}
+.log-head{display:flex;align-items:center;gap:10px;padding:13px 20px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:.78rem;color:var(--dim)}
+.log-head .dots{display:flex;gap:6px}
+.log-head .dots i{width:10px;height:10px;border-radius:50%;background:rgba(142,162,200,.3)}
+.log ul{list-style:none}
+.log li{display:flex;gap:16px;padding:14px 20px;border-bottom:1px solid rgba(120,170,255,.07);font-size:.9rem;align-items:baseline}
+.log li:last-child{border-bottom:none}
+.log time{font-family:var(--mono);font-size:.74rem;color:var(--cyan);flex:none;width:118px}
+.log li em{font-style:normal;color:var(--dim)}
+/* faq */
+.faq details{border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:12px;overflow:hidden}
+.faq summary{cursor:pointer;padding:17px 22px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;font-size:.98rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);color:var(--cyan);font-size:1.15rem;transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .fa-body{padding:0 22px 18px;color:var(--dim);font-size:.92rem}
+.faq a{color:var(--cyan)}
+/* cta band */
+.cta-band{text-align:center;padding:110px 0}
+.cta-band h2{font-size:clamp(2.2rem,5vw,3.6rem)}
+/* footer */
+footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);font-size:.85rem}
+.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+.foot a{color:var(--dim);text-decoration:none;margin-left:18px}
+.foot a:hover{color:var(--ink)}
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+.rv.on{opacity:1;transform:none}
+/* sound toggle */
+#sndBtn{position:fixed;bottom:20px;right:20px;z-index:55;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(10,15,28,.8);display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(8px)}
+#sndBtn:hover{border-color:rgba(53,224,255,.5)}
+#sndBtn svg{width:20px;height:20px;stroke:var(--dim)}
+#sndBtn.on svg{stroke:var(--cyan)}
+/* cursor */
+#cursor{position:fixed;width:340px;height:340px;border-radius:50%;pointer-events:none;z-index:-1;background:radial-gradient(circle,rgba(53,224,255,.07),transparent 60%);transform:translate(-50%,-50%);transition:opacity .3s}
+@media(max-width:900px){
+  .g3,.perf-band{grid-template-columns:repeat(2,1fr)}
+  .g2{grid-template-columns:1fr}
+  .nav-links{display:none}
+  section{padding:70px 0}
+  #cursor{display:none}
+}
+@media(max-width:560px){
+  .g3,.perf-band{grid-template-columns:1fr}
+  .log time{width:88px}
+  h1{font-size:3rem}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  #tunnel{display:none}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<canvas id="tunnel" aria-hidden="true"></canvas>
+<div class="noise" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"></div>
+<div id="progress" aria-hidden="true"></div>
+<nav id="nav">
+  <div class="nav-in">
+    <a class="logo" href="#hero" aria-label="waX VPN home">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#35e0ff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><path d="M32 4 56 14v16c0 15-10 26-24 30C18 56 8 45 8 30V14z" stroke="url(#lg1)" stroke-width="5" stroke-linejoin="round"/><circle cx="32" cy="30" r="7" fill="url(#lg1)"/></svg>
+      waX&nbsp;VPN
+    </a>
+    <div class="nav-links">
+      <a href="#about">Overview</a>
+      <a href="#arch">Architecture</a>
+      <a href="#features">Features</a>
+      <a href="#perf">Performance</a>
+      <a href="#status">Status</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="btn sm" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="glow-orb" style="width:520px;height:520px;background:#35e0ff;top:-140px;left:-160px"></div>
+  <div class="glow-orb" style="width:460px;height:460px;background:#8b5cf6;bottom:-120px;right:-120px"></div>
+  <div class="wrap hero-in">
+    <span class="badge"><span class="dot"></span>IN ACTIVE DEVELOPMENT - FIRST PUBLIC BUILD IN PROGRESS</span>
+    <h1>wa<span class="x">X</span> VPN</h1>
+    <p class="hero-sub" id="scramble" data-text="A fast, beautiful WireGuard VPN client for Windows. Written in Rust, with Cloudflare WARP built in. Built in the open.">A fast, beautiful WireGuard VPN client for Windows. Written in Rust, with Cloudflare WARP built in. Built in the open.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        Watch the build
+      </a>
+      <a class="btn" href="#arch">See the architecture</a>
+    </div>
+    <div class="hero-meta">
+      <div><b>Rust</b>LANGUAGE</div>
+      <div><b>WireGuard</b>PROTOCOL</div>
+      <div><b>Windows</b>PLATFORM</div>
+      <div><b>WARP</b>OPT-IN, BUILT IN</div>
+    </div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span><b>CORE</b>Rust workspace</span><span><b>TUNNEL</b>Official WireGuard for Windows driver</span><span><b>UI</b>egui - pure Rust native GUI</span><span><b>WARP</b>wgcf-compatible, opt-in</span><span><b>PROTOCOL</b>WireGuard</span><span><b>PLATFORM</b>Windows</span><span><b>SOURCE</b>Open on GitHub</span>
+  </div>
+</div>
+
+<section id="about">
+  <div class="wrap">
+    <span class="kicker rv">Overview</span>
+    <h2 class="rv">A real system VPN,<br><span class="grad-text">not a proxy in disguise.</span></h2>
+    <p class="sub rv">waX VPN is built around the official WireGuard for Windows kernel driver, with a Rust core and a Rust-rendered interface. Every claim on this page is labeled: what exists today, and what is still on the roadmap.</p>
+    <div class="grid g3" style="margin-top:40px">
+      <div class="card rv">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5z" stroke-linejoin="round"/></svg></div>
+        <h3>Rust end to end</h3>
+        <p>Core logic, tunnel control and interface code are all Rust. The desktop UI is egui, an immediate-mode GUI written entirely in Rust - no embedded browser engine, no JavaScript layer.</p>
+      </div>
+      <div class="card rv">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M12 2 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" stroke-linejoin="round"/><path d="M8.5 12l2.4 2.4L15.5 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Real WireGuard tunnel</h3>
+        <p>Built on the official WireGuard for Windows kernel driver through the wireguard-nt Rust crate. A true system VPN interface, not a browser trick or userspace packet relay.</p>
+      </div>
+      <div class="card rv">
+        <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1" stroke-linecap="round"/></svg></div>
+        <h3>Cloudflare WARP, built in</h3>
+        <p>WARP support is implemented with a wgcf-compatible client written in Rust. It is strictly opt-in: nothing registers with Cloudflare until you ask it to, inside the app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="arch" style="background:linear-gradient(180deg,transparent,rgba(10,15,28,.55),transparent)">
+  <div class="wrap">
+    <span class="kicker rv">Architecture</span>
+    <h2 class="rv">Four crates, one tunnel.</h2>
+    <p class="sub rv">The planned workspace layout. Each layer is a separate Rust crate with a single job. <span class="tag plan">PLANNED</span></p>
+    <div class="arch">
+      <div class="layer rv"><span class="ln">wax-app</span><div><h4>Interface - egui native GUI</h4><p>Animated immediate-mode desktop interface written entirely in Rust. No WebView, no browser engine bundled.</p></div></div>
+      <div class="layer rv"><span class="ln">wax-core</span><div><h4>Profiles and keys</h4><p>WireGuard config parsing, key generation and profile storage.</p></div></div>
+      <div class="layer rv"><span class="ln">wax-tunnel</span><div><h4>Driver control - wireguard-nt</h4><p>Creates and manages the kernel tunnel adapter through the official WireGuard for Windows driver.</p></div></div>
+      <div class="layer rv"><span class="ln">wax-warp</span><div><h4>WARP client - wgcf-compatible</h4><p>Talks to the Cloudflare WARP API to register and manage WARP profiles. Runs only when you opt in.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <span class="kicker rv">Features</span>
+    <h2 class="rv">Honest labels, no vaporware.</h2>
+    <p class="sub rv">The target feature set. Items marked roadmap are not in the app yet - this page updates as each one lands and is tested.</p>
+    <div class="grid g3" style="margin-top:40px">
+      <div class="card rv"><h3>Profiles and keys<span class="tag plan">PLANNED</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place.</p></div>
+      <div class="card rv"><h3>One-click connect<span class="tag plan">PLANNED</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI.</p></div>
+      <div class="card rv"><h3>WARP profiles<span class="tag plan">OPT-IN</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on.</p></div>
+      <div class="card rv"><h3>Kill switch<span class="tag road">ROADMAP</span></h3><p>Block traffic if the tunnel drops. On the roadmap, implemented and tested incrementally.</p></div>
+      <div class="card rv"><h3>DNS control<span class="tag road">ROADMAP</span></h3><p>Per-profile DNS pushed through the tunnel. Planned, not shipped.</p></div>
+      <div class="card rv"><h3>Tray and autostart<span class="tag road">ROADMAP</span></h3><p>Live in the system tray, start with Windows if you want it to. Planned, not shipped.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="perf" style="background:linear-gradient(180deg,transparent,rgba(10,15,28,.55),transparent)">
+  <div class="wrap">
+    <span class="kicker rv">Performance</span>
+    <h2 class="rv">Fast by construction.<br><span class="grad-text">Proven by measurement.</span></h2>
+    <p class="sub rv">Rust and a kernel driver are chosen for low CPU and memory cost. But no numbers are claimed here until they are measured on real Windows hardware - benchmarks will be published with releases.</p>
+    <div class="perf-band">
+      <div class="metric rv"><b>-</b><span>Memory use<br>measured at release</span></div>
+      <div class="metric rv"><b>-</b><span>Idle CPU<br>measured at release</span></div>
+      <div class="metric rv"><b>-</b><span>Throughput<br>measured at release</span></div>
+      <div class="metric rv"><b>-</b><span>Installer size<br>measured at release</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="status">
+  <div class="wrap">
+    <span class="kicker rv">Status</span>
+    <h2 class="rv">Built in the open.</h2>
+    <p class="sub rv">Live development log. This is the real state of the project, updated as work lands - including the boring parts.</p>
+    <div class="log rv" style="margin-top:30px">
+      <div class="log-head"><span class="dots"><i></i><i></i><i></i></span>wax-vpn / devlog</div>
+      <ul>
+        <li><time>Nov 9, 23:15 IST</time><span>Project started. Goal: full WireGuard VPN client for Windows, Rust-first, WARP built in.</span></li>
+        <li><time>Nov 9, 23:16 IST</time><span>Architecture settled: wax-core, wax-tunnel (wireguard-nt), wax-warp (wgcf-compatible, opt-in), wax-app desktop UI.</span></li>
+        <li><time>Nov 9, 23:26 IST</time><span>UI direction set to egui: a pure-Rust immediate-mode GUI, no WebView or browser engine. Core keys/profiles, opt-in WARP client, WireGuard-NT backend, DNS and firewall controls, CLI and GUI written. <em>First compile still pending - none of this is tested or shipped yet.</em></span></li>
+        <li><time>Nov 9, 23:20 IST</time><span>Public repo created: <a href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener" style="color:var(--cyan)">github.com/vio137/wax-vpn</a>. <em>Scaffolding in progress - no build yet.</em></span></li>
+        <li><time>Next</time><span><em>First CI build on Windows runners. v0.1.0-preview installer targeted at the first hourly checkpoint; not guaranteed until it compiles, installs and passes checks.</em></span></li>
+      </ul>
+    </div>
+    <div style="margin-top:26px" class="rv">
+      <a class="btn" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">Star or watch the repo for releases</a>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap" style="max-width:820px">
+    <span class="kicker rv">FAQ</span>
+    <h2 class="rv">Straight answers.</h2>
+    <div class="faq" style="margin-top:30px">
+      <details class="rv"><summary>Can I download waX VPN yet?</summary><div class="fa-body">Not yet. The app is in active development and the first preview installer has not shipped. Releases will appear on the <a href="https://github.com/vio137/wax-vpn/releases" target="_blank" rel="noopener">GitHub releases page</a> when they exist and pass checks. This site will link them directly, with hashes.</div></details>
+      <details class="rv"><summary>Is it a real VPN or a proxy?</summary><div class="fa-body">The plan is a real system VPN: waX uses the official WireGuard for Windows kernel driver, so all apps route through the tunnel - not just one browser.</div></details>
+      <details class="rv"><summary>What does WARP built in mean?</summary><div class="fa-body">waX includes a Rust client for the Cloudflare WARP API (compatible with what wgcf does), so you can create and use WARP profiles without a separate tool. It is opt-in: no registration happens until you choose it in the app, and WARP use is subject to Cloudflare's own terms.</div></details>
+      <details class="rv"><summary>Which platforms?</summary><div class="fa-body">Windows first and only, for now. Focusing on one platform keeps the tunnel, installer and UI polished instead of spreading thin.</div></details>
+      <details class="rv"><summary>Is the source public?</summary><div class="fa-body">Yes. Development happens in the open at <a href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">github.com/vio137/wax-vpn</a>.</div></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band">
+  <div class="wrap">
+    <h2 class="rv">Watch a VPN<br><span class="grad-text">being built properly.</span></h2>
+    <p class="sub rv" style="margin:14px auto 30px;text-align:center">New builds land on GitHub with honest release notes about what works and what does not yet.</p>
+    <a class="btn primary rv" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">Open the repo</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <span>waX VPN - a WireGuard client for Windows, written in Rust. Built in the open.</span>
+    <span>
+      <a href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">Repo</a>
+      <a href="https://github.com/vio137/wax-vpn/releases" target="_blank" rel="noopener">Releases</a>
+      <a href="#status">Status</a>
+    </span>
+  </div>
+</footer>
+
+<button id="sndBtn" aria-label="Toggle sound" aria-pressed="false" title="Sound">
+  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path class="w1" d="M15 9.5a4 4 0 0 1 0 5"/><path class="w2" d="M17.5 7a8 8 0 0 1 0 10"/><line class="off" x1="15" y1="9" x2="21" y2="15"/><line class="off" x1="21" y1="9" x2="15" y2="15"/></svg>
+</button>
+<script>
+(function(){
+"use strict";
+var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var finePointer = window.matchMedia("(pointer: fine)").matches;
+
+/* ---- scroll progress + nav state ---- */
+var nav = document.getElementById("nav"), prog = document.getElementById("progress");
+function onScroll(){
+  var h = document.documentElement;
+  var max = h.scrollHeight - h.clientHeight;
+  prog.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+  nav.classList.toggle("scrolled", h.scrollTop > 24);
+}
+document.addEventListener("scroll", onScroll, {passive:true});
+onScroll();
+
+/* ---- reveal on scroll ---- */
+var io = new IntersectionObserver(function(es){
+  es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); } });
+},{threshold:.12, rootMargin:"0px 0px -6% 0px"});
+document.querySelectorAll(".rv").forEach(function(el){
+  if(reduced){ el.classList.add("on"); } else { io.observe(el); }
+});
+
+/* ---- ticker: duplicate content for seamless loop ---- */
+var tick = document.getElementById("tickerTrack");
+tick.innerHTML += tick.innerHTML;
+
+/* ---- scramble / decode hero subtitle ---- */
+var scrEl = document.getElementById("scramble");
+if(!reduced && scrEl){
+  var glyphs = "!<>-_\/[]{}=+*^?#";
+  var finalText = scrEl.getAttribute("data-text");
+  var frame = 0, queue = finalText.split("").map(function(ch, i){
+    return {ch:ch, start: i * .5, end: i * .5 + 4 + Math.random()*7};
+  });
+  function scrambleTick(){
+    var out = "", done = 0;
+    for(var i=0;i<queue.length;i++){
+      var q = queue[i];
+      if(frame >= q.end || q.ch === " "){ out += q.ch; done++; }
+      else if(frame >= q.start){ out += "<span style='color:rgba(53,224,255,.55)'>" + glyphs[Math.floor(Math.random()*glyphs.length)] + "</span>"; }
+      else { out += q.ch; }
+    }
+    scrEl.innerHTML = out;
+    if(done < queue.length){ frame++; requestAnimationFrame(scrambleTick); }
+    else { scrEl.textContent = finalText; }
+  }
+  setTimeout(function(){ requestAnimationFrame(scrambleTick); }, 250);
+}
+
+/* ---- card spotlight + tilt ---- */
+if(finePointer && !reduced){
+  document.querySelectorAll(".card").forEach(function(card){
+    card.addEventListener("pointermove", function(ev){
+      var r = card.getBoundingClientRect();
+      var x = ev.clientX - r.left, y = ev.clientY - r.top;
+      card.style.setProperty("--mx", x + "px");
+      card.style.setProperty("--my", y + "px");
+      var rx = ((y / r.height) - .5) * -6, ry = ((x / r.width) - .5) * 6;
+      card.style.transform = "perspective(800px) rotateX(" + rx + "deg) rotateY(" + ry + "deg) translateY(-3px)";
+    });
+    card.addEventListener("pointerleave", function(){ card.style.transform = ""; });
+  });
+} else {
+  document.querySelectorAll(".card").forEach(function(card){
+    card.addEventListener("pointermove", function(ev){
+      var r = card.getBoundingClientRect();
+      card.style.setProperty("--mx", (ev.clientX - r.left) + "px");
+      card.style.setProperty("--my", (ev.clientY - r.top) + "px");
+    });
+  });
+}
+
+/* ---- cursor glow ---- */
+var cursor = document.getElementById("cursor");
+if(finePointer && !reduced){
+  var cx = -400, cy = -400, tx = cx, ty = cy;
+  document.addEventListener("pointermove", function(e){ tx = e.clientX; ty = e.clientY; }, {passive:true});
+  (function moveCursor(){
+    cx += (tx - cx) * .12; cy += (ty - cy) * .12;
+    cursor.style.left = cx + "px"; cursor.style.top = cy + "px";
+    requestAnimationFrame(moveCursor);
+  })();
+} else { cursor.style.display = "none"; }
+
+/* ---- sound (opt-in, WebAudio, no assets) ---- */
+var sndBtn = document.getElementById("sndBtn"), actx = null, sndOn = false;
+function blip(freq, dur, gain){
+  if(!sndOn || !actx) return;
+  var o = actx.createOscillator(), g = actx.createGain();
+  o.type = "sine"; o.frequency.value = freq;
+  g.gain.setValueAtTime(0, actx.currentTime);
+  g.gain.linearRampToValueAtTime(gain, actx.currentTime + .012);
+  g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + dur);
+  o.connect(g).connect(actx.destination);
+  o.start(); o.stop(actx.currentTime + dur + .02);
+}
+function paintSnd(){
+  sndBtn.classList.toggle("on", sndOn);
+  sndBtn.setAttribute("aria-pressed", sndOn ? "true" : "false");
+  sndBtn.querySelectorAll(".off").forEach(function(l){ l.style.display = sndOn ? "none" : ""; });
+  sndBtn.querySelectorAll(".w1,.w2").forEach(function(w){ w.style.display = sndOn ? "" : "none"; });
+}
+sndBtn.addEventListener("click", function(){
+  sndOn = !sndOn;
+  if(sndOn && !actx){ try{ actx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){} }
+  if(actx && actx.state === "suspended"){ actx.resume(); }
+  paintSnd(); blip(660, .09, .05);
+});
+paintSnd();
+document.querySelectorAll(".btn, summary").forEach(function(el){
+  el.addEventListener("mouseenter", function(){ blip(880, .05, .02); });
+  el.addEventListener("click", function(){ blip(520, .08, .04); });
+});
+
+/* ---- hero tunnel canvas: particles flowing through a wire tunnel ---- */
+var cv = document.getElementById("tunnel"), ctx2 = cv.getContext("2d");
+var W = 0, H = 0, DPR = 1, running = false, rafId = null;
+var parts = [], rings = [];
+function sizeCanvas(){
+  DPR = Math.min(window.devicePixelRatio || 1, 1.75);
+  W = cv.width = Math.floor(innerWidth * DPR);
+  H = cv.height = Math.floor(innerHeight * DPR);
+}
+function initParts(){
+  parts = []; rings = [];
+  var n = Math.min(150, Math.floor(innerWidth / 9));
+  for(var i=0;i<n;i++){
+    parts.push({a: Math.random()*Math.PI*2, r: .15 + Math.random()*.85, z: Math.random(), s: .0018 + Math.random()*.0032,
+                hue: Math.random() < .72 ? 0 : 1, w: .5 + Math.random()*1.4});
+  }
+  for(var j=0;j<9;j++){ rings.push(j/9); }
+}
+function drawTunnel(){
+  if(!running) return;
+  ctx2.clearRect(0,0,W,H);
+  var cxx = W * .5, cyy = H * .42, base = Math.min(W,H);
+  var t = performance.now() * .0001;
+  /* rings */
+  ctx2.lineWidth = 1 * DPR;
+  for(var i=0;i<rings.length;i++){
+    rings[i] += .0016;
+    if(rings[i] > 1) rings[i] -= 1;
+    var z = rings[i], rad = z*z * base * .95 + 2;
+    var alpha = .04 + z * .10;
+    var wob = Math.sin(t*8 + i) * 6 * DPR * z;
+    ctx2.strokeStyle = i % 3 === 2 ? "rgba(139,92,246," + alpha + ")" : "rgba(53,224,255," + alpha + ")";
+    ctx2.beginPath();
+    ctx2.ellipse(cxx + wob, cyy, rad * 1.25, rad * .8, 0, 0, Math.PI*2);
+    ctx2.stroke();
+  }
+  /* particles */
+  for(var p=0;p<parts.length;p++){
+    var pt = parts[p];
+    pt.z += pt.s; pt.a += .0006;
+    if(pt.z > 1){ pt.z -= 1; pt.a = Math.random()*Math.PI*2; }
+    var pr = pt.r * (0.05 + pt.z*pt.z) * base * .8;
+    var x = cxx + Math.cos(pt.a + t*4) * pr * 1.25;
+    var y = cyy + Math.sin(pt.a + t*4) * pr * .8;
+    var sz = (0.6 + pt.z * 2.4) * pt.w * DPR;
+    var al = .12 + pt.z * .55;
+    ctx2.fillStyle = pt.hue ? "rgba(139,92,246," + al + ")" : "rgba(53,224,255," + al + ")";
+    ctx2.beginPath(); ctx2.arc(x, y, sz, 0, Math.PI*2); ctx2.fill();
+    /* short trail */
+    var tzx = cxx + Math.cos(pt.a + t*4) * (pt.r * (0.05 + Math.max(0,pt.z-.03)*(pt.z-.03)) * base * .8) * 1.25;
+    var tzy = cyy + Math.sin(pt.a + t*4) * (pt.r * (0.05 + Math.max(0,pt.z-.03)*(pt.z-.03)) * base * .8) * .8;
+    ctx2.strokeStyle = pt.hue ? "rgba(139,92,246," + (al*.5) + ")" : "rgba(53,224,255," + (al*.5) + ")";
+    ctx2.lineWidth = sz * .6;
+    ctx2.beginPath(); ctx2.moveTo(tzx, tzy); ctx2.lineTo(x, y); ctx2.stroke();
+  }
+  rafId = requestAnimationFrame(drawTunnel);
+}
+function startTunnel(){ if(running || reduced) return; running = true; rafId = requestAnimationFrame(drawTunnel); }
+function stopTunnel(){ running = false; if(rafId) cancelAnimationFrame(rafId); }
+if(!reduced){
+  sizeCanvas(); initParts(); startTunnel();
+  window.addEventListener("resize", function(){ sizeCanvas(); initParts(); }, {passive:true});
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) stopTunnel(); else startTunnel();
+  });
+}
+})();
+</script>
+</body>
+</html>
