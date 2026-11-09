@@ -488,6 +488,55 @@ function journeyAt(sp){
   return secKeys[secKeys.length - 1];
 }
 sizeCanvas(); initScene(); buildJourney();
+
+/* ---- journey rail: section-aware progress nav ---- */
+var railLinks = [];
+(function initJourneyRail(){
+  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq"];
+  var labels = ["Intro", "Overview", "Architecture", "Features", "Performance", "Status", "FAQ"];
+  var rail = document.createElement("div");
+  rail.className = "jrail";
+  rail.setAttribute("role", "navigation");
+  rail.setAttribute("aria-label", "Page journey");
+  ids.forEach(function(id, i){
+    var a = document.createElement("a");
+    a.href = "#" + id;
+    a.setAttribute("aria-label", labels[i]);
+    var lbl = document.createElement("span"); lbl.className = "lbl"; lbl.textContent = labels[i];
+    var dot = document.createElement("span"); dot.className = "dot";
+    a.appendChild(lbl); a.appendChild(dot);
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      var doc = document.documentElement;
+      var max = Math.max(1, doc.scrollHeight - innerHeight);
+      var el = document.getElementById(id);
+      var target = secKeys[i] ? secKeys[i].at * max : (el ? el.offsetTop : 0);
+      window.scrollTo({top: target, behavior: reduced ? "auto" : "smooth"});
+      if(history.replaceState) history.replaceState(null, "", "#" + id);
+    });
+    rail.appendChild(a);
+    railLinks.push(a);
+  });
+  document.body.appendChild(rail);
+  function updateRail(){
+    if(!secKeys.length) return;
+    var doc = document.documentElement;
+    var max = Math.max(1, doc.scrollHeight - innerHeight);
+    var sp = Math.max(0, Math.min(1, (window.scrollY || 0) / max));
+    var on = 0;
+    for(var i = 1; i < secKeys.length; i++){
+      var mid = (secKeys[i - 1].at + secKeys[i].at) / 2;
+      if(sp >= mid) on = i;
+    }
+    railLinks.forEach(function(a, i){
+      a.classList.toggle("on", i === on);
+      a.classList.toggle("past", i < on);
+    });
+  }
+  document.addEventListener("scroll", updateRail, {passive: true});
+  window.addEventListener("resize", updateRail, {passive: true});
+  updateRail();
+})();
 if(reduced){
   running = true; drawScene(4200); stopScene();
 } else {
