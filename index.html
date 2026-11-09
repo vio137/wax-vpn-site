@@ -149,10 +149,22 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 #sndBtn.on svg{stroke:var(--cyan)}
 /* cursor */
 #cursor{position:fixed;width:340px;height:340px;border-radius:50%;pointer-events:none;z-index:-1;background:radial-gradient(circle,rgba(53,224,255,.07),transparent 60%);transform:translate(-50%,-50%);transition:opacity .3s}
+#menuBtn{display:none;width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:rgba(20,30,56,.5);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px;margin-left:auto;padding:0}
+#menuBtn span{display:block;width:16px;height:1.5px;background:var(--ink);transition:transform .25s cubic-bezier(.22,1,.36,1),opacity .2s}
+#menuBtn[aria-expanded="true"] span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+#menuBtn[aria-expanded="true"] span:nth-child(2){opacity:0}
+#menuBtn[aria-expanded="true"] span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+#menuPanel{position:fixed;top:64px;left:0;right:0;z-index:49;background:rgba(6,9,17,.965);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(255,255,255,.05);padding:8px 4vw 16px;display:none;flex-direction:column}
+#menuPanel.open{display:flex}
+#menuPanel a{color:var(--ink);text-decoration:none;padding:12px 8px;font-size:1rem;border-bottom:1px solid rgba(120,170,255,.07);opacity:0;transform:translateY(-6px);transition:opacity .3s cubic-bezier(.22,1,.36,1) calc(var(--i)*40ms),transform .3s cubic-bezier(.22,1,.36,1) calc(var(--i)*40ms),color .18s}
+#menuPanel a:last-child{border-bottom:none}
+#menuPanel a:hover{color:var(--cyan)}
+#menuPanel.open a{opacity:1;transform:none}
 @media(max-width:900px){
   .g3,.perf-band{grid-template-columns:repeat(2,1fr)}
   .g2{grid-template-columns:1fr}
   .nav-links{display:none}
+  #menuBtn{display:flex}
   section{padding:70px 0}
   #cursor{display:none}
 }
@@ -207,7 +219,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <a href="#status">Status</a>
       <a href="#faq">FAQ</a>
     </div>
+    <button id="menuBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
     <a class="btn sm" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">GitHub</a>
+  </div>
+  <div id="menuPanel">
+    <a href="#about" style="--i:0">Overview</a>
+    <a href="#arch" style="--i:1">Architecture</a>
+    <a href="#features" style="--i:2">Features</a>
+    <a href="#perf" style="--i:3">Performance</a>
+    <a href="#status" style="--i:4">Status</a>
+    <a href="#faq" style="--i:5">FAQ</a>
   </div>
 </nav>
 
@@ -685,11 +706,27 @@ function drawScene(now){
   var cx = hx + (px - .5) * base * .05, cy = hy + (py - .5) * base * .04 - sc * base * .14;
   cv.style.opacity = (1 - sc * .84).toFixed(3);
   ctx2.globalCompositeOperation = "source-over";
+  var lr = R * 3.4;
   for(var i = 0; i < stars.length; i++){
     var st = stars[i];
     var sx = (st.x * W + (px - .5) * 42 * st.z * DPR) % W; if(sx < 0) sx += W;
     var sy = (st.y * H + (py - .5) * 26 * st.z * DPR) % H; if(sy < 0) sy += H;
     var a = .2 + .55 * st.z * (.6 + .4 * Math.sin(t * 1.2 + st.tw));
+    var dx = sx - cx, dy = sy - cy, d2 = dx * dx + dy * dy;
+    if(d2 < lr * lr && d2 > 1){
+      var d = Math.sqrt(d2);
+      var bend = Math.min(R * R * .9 / d, R);
+      var nx = sx + dx / d * bend, ny = sy + dy / d * bend;
+      if(d < R * 1.6){
+        var tx = -dy / d, ty2 = dx / d;
+        var sl = (1.6 - d / (R * 1.6)) * 7 * st.z * DPR + 2 * DPR;
+        ctx2.strokeStyle = col(216, 228, 255, Math.min(1, a * 1.35));
+        ctx2.lineWidth = st.r * DPR;
+        ctx2.beginPath(); ctx2.moveTo(nx - tx * sl, ny - ty2 * sl); ctx2.lineTo(nx + tx * sl, ny + ty2 * sl); ctx2.stroke();
+        continue;
+      }
+      sx = nx; sy = ny;
+    }
     ctx2.fillStyle = col(206, 222, 255, a);
     ctx2.beginPath(); ctx2.arc(sx, sy, st.r * DPR, 0, 7); ctx2.fill();
   }
@@ -756,6 +793,17 @@ if(reduced){
   document.addEventListener("visibilitychange", function(){ if(document.hidden) stopScene(); else startScene(); });
   if(finePointer){
     document.addEventListener("pointermove", function(e){ tpx = e.clientX / innerWidth; tpy = e.clientY / innerHeight; }, {passive: true});
+  }
+  var mb = document.getElementById("menuBtn"), mpl = document.getElementById("menuPanel");
+  if(mb && mpl){
+    var closeMenu = function(){ mpl.classList.remove("open"); mb.setAttribute("aria-expanded", "false"); };
+    mb.addEventListener("click", function(e){
+      e.stopPropagation();
+      var open = mpl.classList.toggle("open");
+      mb.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    mpl.querySelectorAll("a").forEach(function(a){ a.addEventListener("click", closeMenu); });
+    document.addEventListener("click", function(e){ if(mpl.classList.contains("open") && !mpl.contains(e.target)) closeMenu(); });
   }
 }
 })();
