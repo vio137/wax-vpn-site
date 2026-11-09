@@ -106,7 +106,8 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .layer+.layer{margin-top:26px}
 .layer+.layer::before{content:"";position:absolute;top:-27px;left:44px;width:2px;height:26px;background:linear-gradient(var(--cyan),var(--violet));opacity:.6}
 .layer .ln{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.02em;width:78px;flex:none}
-#archflow{width:100%;height:120px;display:block;margin:2px 0 18px}
+#archflow{width:100%;height:170px;display:block;margin:2px 0 4px}
+.flow-cap{color:var(--dim);font-size:.72rem;font-family:var(--mono);margin:0 0 18px}
 .layer.live{border-color:rgba(53,224,255,.55);background:rgba(20,30,56,.85)}
 .layer h4{font-size:1rem}
 .layer p{color:var(--dim);font-size:.85rem}
@@ -293,12 +294,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="wrap">
     <span class="kicker rv">Architecture</span>
     <h2 class="rv">Four crates, one tunnel.</h2>
-    <p class="sub rv">The planned workspace layout. Each layer is a separate Rust crate with a single job. <span class="tag plan">Planned</span></p>
+    <p class="sub rv">The workspace layout. Each layer is a separate Rust crate with a single job.</p>
     <canvas id="archflow" aria-hidden="true"></canvas>
+    <p class="flow-cap rv">Illustrative crate map - lines are dependencies, not live traffic or a packet route. WARP is an opt-in profile source, not a hop in the tunnel.</p>
     <div class="arch">
       <div class="layer rv"><span class="ln">wax-app</span><div><h4>Interface - egui native GUI</h4><p>Animated immediate-mode desktop interface written entirely in Rust. No WebView, no browser engine bundled.</p></div></div>
       <div class="layer rv"><span class="ln">wax-core</span><div><h4>Profiles and keys</h4><p>WireGuard config parsing, key generation and profile storage.</p></div></div>
-      <div class="layer rv"><span class="ln">wax-tunnel</span><div><h4>Driver control - wireguard-nt</h4><p>Creates and manages the kernel tunnel adapter through the official WireGuard for Windows driver.</p></div></div>
+      <div class="layer rv"><span class="ln">wax-tunnel</span><div><h4>Driver control - <span style="white-space:nowrap">wireguard-nt</span></h4><p>Creates and manages the kernel tunnel adapter through the official WireGuard for Windows driver.</p></div></div>
       <div class="layer rv"><span class="ln">wax-warp</span><div><h4>WARP client - wgcf-compatible</h4><p>Talks to the Cloudflare WARP API to register and manage WARP profiles. Runs only when you opt in.</p></div></div>
     </div>
   </div>
@@ -813,54 +815,87 @@ if(reduced){
     var fc = document.getElementById("archflow");
     if(!fc) return;
     var fx = fc.getContext("2d");
-    var fw = 0, fh = 0, nodes = [], packets = [], visible = false, frun = false, last = 0, spawnAt = 0;
+    var fw = 0, fh = 0, nodes = [], edges = [], packets = [], visible = false, frun = false, last = 0, spawnAt = 0;
     var layers = Array.prototype.slice.call(document.querySelectorAll("#arch .layer"));
-    var NAMES = ["wax-app", "wax-core", "wax-tunnel", "wax-warp"];
-    function pathY(x){ return fh * .42 + Math.sin(x / fw * Math.PI * 2 + .6) * fh * .13; }
     function size(){
       var r = fc.getBoundingClientRect();
       fw = Math.max(1, r.width); fh = Math.max(1, r.height);
       fc.width = fw * DPR; fc.height = fh * DPR;
       fx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      nodes = NAMES.map(function(n, i){ return {x: fw * (.08 + .84 * i / (NAMES.length - 1)), f: 0, name: n, hit: {}}; });
+      nodes = [
+        {name: "wax-app",    x: fw * .13, y: fh * .50, f: 0},
+        {name: "wax-core",   x: fw * .52, y: fh * .26, f: 0},
+        {name: "wax-tunnel", x: fw * .52, y: fh * .74, f: 0},
+        {name: "wax-warp",   x: fw * .88, y: fh * .26, f: 0}
+      ];
+      edges = [
+        {a: 0, b: 1, bow: -.12, opt: false},
+        {a: 0, b: 2, bow:  .12, opt: false},
+        {a: 1, b: 2, bow:  .28, opt: false},
+        {a: 3, b: 1, bow:  .10, opt: true}
+      ];
+    }
+    function ctrl(e){
+      var mx = (nodes[e.a].x + nodes[e.b].x) / 2, my = (nodes[e.a].y + nodes[e.b].y) / 2;
+      var dx = nodes[e.b].x - nodes[e.a].x, dy = nodes[e.b].y - nodes[e.a].y;
+      var len = Math.sqrt(dx * dx + dy * dy) || 1;
+      return {x: mx - dy / len * e.bow * len, y: my + dx / len * e.bow * len};
+    }
+    function epos(e, t){
+      var c = ctrl(e), u = 1 - t;
+      return {
+        x: u * u * nodes[e.a].x + 2 * u * t * c.x + t * t * nodes[e.b].x,
+        y: u * u * nodes[e.a].y + 2 * u * t * c.y + t * t * nodes[e.b].y
+      };
+    }
+    function pickEdge(){
+      var r = Math.random();
+      if(r < .18) return edges[3];
+      return edges[Math.floor(Math.random() * 3)];
     }
     function drawFrame(dt){
       fx.clearRect(0, 0, fw, fh);
-      var grad = fx.createLinearGradient(0, 0, fw, 0);
-      grad.addColorStop(0, "rgba(53,224,255,.45)");
-      grad.addColorStop(1, "rgba(139,124,255,.45)");
-      fx.strokeStyle = grad; fx.lineWidth = 1.2;
-      fx.beginPath();
-      for(var sx = 0; sx <= fw; sx += 6){ var sy = pathY(sx); if(sx === 0) fx.moveTo(sx, sy); else fx.lineTo(sx, sy); }
-      fx.stroke();
-      for(var i = packets.length - 1; i >= 0; i--){
+      var i, e, c;
+      fx.lineWidth = 1.1;
+      for(i = 0; i < edges.length; i++){
+        e = edges[i]; c = ctrl(e);
+        fx.strokeStyle = e.opt ? "rgba(139,124,255,.4)" : "rgba(53,224,255,.28)";
+        fx.setLineDash(e.opt ? [4, 5] : []);
+        fx.beginPath();
+        fx.moveTo(nodes[e.a].x, nodes[e.a].y);
+        fx.quadraticCurveTo(c.x, c.y, nodes[e.b].x, nodes[e.b].y);
+        fx.stroke();
+      }
+      fx.setLineDash([]);
+      var ow = nodes[3];
+      fx.font = "9px 'JetBrains Mono', monospace";
+      fx.textAlign = "center";
+      fx.fillStyle = col(139, 124, 255, .75);
+      fx.fillText("opt-in", (ow.x + nodes[1].x) / 2 + 4, (ow.y + nodes[1].y) / 2 - 8);
+      for(i = packets.length - 1; i >= 0; i--){
         var p = packets[i];
-        p.x += dt * p.v;
-        if(p.x > fw + 8){ packets.splice(i, 1); continue; }
-        var py = pathY(p.x);
-        for(var j = 0; j < nodes.length; j++){
-          var n = nodes[j];
-          if(Math.abs(p.x - n.x) < 5 && !p.hit[j]){ p.hit[j] = 1; n.f = 1; pulse(j); }
-        }
-        var gl = fx.createRadialGradient(p.x, py, 0, p.x, py, 7);
+        p.t += dt * p.v;
+        if(p.t >= 1){ nodes[p.e.b].f = 1; pulse(p.e.b); packets.splice(i, 1); continue; }
+        var pos = epos(p.e, p.t);
+        var gl = fx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 7);
         gl.addColorStop(0, "rgba(190,245,255,.95)");
-        gl.addColorStop(.4, "rgba(53,224,255,.55)");
+        gl.addColorStop(.4, p.e.opt ? "rgba(139,124,255,.55)" : "rgba(53,224,255,.55)");
         gl.addColorStop(1, "rgba(53,224,255,0)");
         fx.fillStyle = gl;
-        fx.beginPath(); fx.arc(p.x, py, 7, 0, 7); fx.fill();
+        fx.beginPath(); fx.arc(pos.x, pos.y, 7, 0, 7); fx.fill();
       }
       fx.font = "10px 'JetBrains Mono', monospace";
       fx.textAlign = "center";
-      for(var k = 0; k < nodes.length; k++){
-        var nd = nodes[k], ny = pathY(nd.x);
+      for(i = 0; i < nodes.length; i++){
+        var nd = nodes[i];
         nd.f = Math.max(0, nd.f - dt * .0016);
         fx.fillStyle = col(53, 224, 255, .25 + nd.f * .7);
-        fx.beginPath(); fx.arc(nd.x, ny, 3 + nd.f * 3, 0, 7); fx.fill();
+        fx.beginPath(); fx.arc(nd.x, nd.y, 3 + nd.f * 3, 0, 7); fx.fill();
         fx.strokeStyle = col(53, 224, 255, .35 + nd.f * .6);
         fx.lineWidth = 1;
-        fx.beginPath(); fx.arc(nd.x, ny, 6.5 + nd.f * 5, 0, 7); fx.stroke();
+        fx.beginPath(); fx.arc(nd.x, nd.y, 6.5 + nd.f * 5, 0, 7); fx.stroke();
         fx.fillStyle = col(139, 157, 194, .85);
-        fx.fillText(nd.name, nd.x, ny + 24);
+        fx.fillText(nd.name, nd.x, nd.y + 22);
       }
     }
     var liveTimers = {};
@@ -873,7 +908,7 @@ if(reduced){
     function loop(now){
       if(!visible || document.hidden){ frun = false; return; }
       var dt = Math.min(50, now - last); last = now;
-      if(now >= spawnAt){ packets.push({x: -8, v: .13 + Math.random() * .06, hit: {}}); spawnAt = now + 900 + Math.random() * 1400; }
+      if(now >= spawnAt){ var e2 = pickEdge(); packets.push({e: e2, t: 0, v: .0016 + Math.random() * .0009}); nodes[e2.a].f = Math.max(nodes[e2.a].f, .55); spawnAt = now + 700 + Math.random() * 1100; }
       drawFrame(dt);
       requestAnimationFrame(loop);
     }
