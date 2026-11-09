@@ -114,6 +114,7 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .log-head .dots i{width:10px;height:10px;border-radius:50%;background:rgba(142,162,200,.3)}
 .log ul{list-style:none}
 .log li{display:flex;gap:16px;padding:14px 20px;border-bottom:1px solid rgba(120,170,255,.07);font-size:.9rem;align-items:baseline}
+.log li span{overflow-wrap:anywhere}
 .log li:last-child{border-bottom:none}
 .log time{font-family:var(--mono);font-size:.74rem;color:var(--cyan);flex:none;width:118px}
 .log li em{font-style:normal;color:var(--dim)}
