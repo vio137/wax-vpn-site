@@ -243,7 +243,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="glow-orb" style="width:520px;height:520px;background:#ff9a3c;top:-140px;left:-160px"></div>
   <div class="glow-orb" style="width:460px;height:460px;background:#c2481d;bottom:-120px;right:-120px"></div>
   <div class="wrap hero-in">
-    <span class="badge"><span class="dot"></span>Active development - preview build published, runtime checks pending</span>
+    <span class="badge"><span class="dot"></span>Active development - preview builds published, tunnel and GUI legs passing in CI</span>
     <h1>wa<span class="x">X</span> VPN</h1>
     <p class="hero-sub" id="scramble" data-text="A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.">A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.</p>
     <div class="hero-cta">
@@ -272,7 +272,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="wrap">
     <span class="kicker rv">Overview</span>
     <h2 class="rv">Designed as a real system VPN,<br><span class="grad-text">not a proxy in disguise.</span></h2>
-    <p class="sub rv">waX VPN is being built around the official WireGuard for Windows kernel driver, with a Rust core and a Rust-rendered interface. The tunnel has passed live CI checks against the official WireGuard demo server: handshake, a ping through the tunnel, and DNS setup and restore on a clean disconnect. GUI-driven connections, leak tests and crash recovery are still being verified. Every claim on this page is labeled: what is verified, and what is still on the roadmap.</p>
+    <p class="sub rv">waX VPN is being built around the official WireGuard for Windows kernel driver, with a Rust core and a Rust-rendered interface. The tunnel has passed live CI checks against the official WireGuard demo server: handshake, a ping through the tunnel, DNS setup and restore on a clean disconnect, and a GUI-driven connect. Kill-switch leak testing is still outstanding. Every claim on this page is labeled: what is verified, and what is still on the roadmap.</p>
     <div class="grid g3" style="margin-top:40px">
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5z" stroke-linejoin="round"/></svg></div>
@@ -282,7 +282,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M12 2 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" stroke-linejoin="round"/><path d="M8.5 12l2.4 2.4L15.5 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Real WireGuard tunnel</h3>
-        <p>Tunnel code drives the official WireGuard for Windows kernel driver through the wireguard-nt Rust crate - a real system VPN design, not a browser trick or userspace packet relay. Live handshake and a through-tunnel ping are verified in CI; GUI-driven connect is still pending.</p>
+        <p>Tunnel code drives the official WireGuard for Windows kernel driver through the wireguard-nt Rust crate - a real system VPN design, not a browser trick or userspace packet relay. Live handshake, a through-tunnel ping, and a GUI-driven connect are all verified in CI.</p>
       </div>
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1" stroke-linecap="round"/></svg></div>
@@ -313,14 +313,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="wrap">
     <span class="kicker rv">Features</span>
     <h2 class="rv">Honest labels, no vaporware.</h2>
-    <p class="sub rv">The target feature set. Items marked roadmap are not in the app yet - this page updates as each one lands and is tested.</p>
+    <p class="sub rv">The feature set as it actually stands: what is in the current preview builds, what is opt-in, and what is still roadmap. This page updates as each one lands and is tested.</p>
     <div class="grid g3" style="margin-top:40px">
-      <div class="card rv"><h3>Profiles and keys<span class="tag plan">Planned</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place.</p></div>
-      <div class="card rv"><h3>One-click connect<span class="tag plan">Planned</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI.</p></div>
-      <div class="card rv"><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on.</p></div>
-      <div class="card rv"><h3>Kill switch<span class="tag road">Roadmap</span></h3><p>Block traffic if the tunnel drops. On the roadmap, implemented and tested incrementally.</p></div>
-      <div class="card rv"><h3>DNS control<span class="tag road">Roadmap</span></h3><p>Per-profile DNS pushed through the tunnel. Planned, not shipped.</p></div>
-      <div class="card rv"><h3>Tray and autostart<span class="tag road">Roadmap</span></h3><p>Live in the system tray, start with Windows if you want it to. Planned, not shipped.</p></div>
+      <div class="card rv"><h3>Profiles and keys<span class="tag live">In preview</span></h3><p>Import and manage WireGuard configs, generate keys, switch tunnels from one place. Profile picker included in the current preview.</p></div>
+      <div class="card rv"><h3>One-click connect<span class="tag live">In preview</span></h3><p>Connect and disconnect with a single action, with live tunnel state in the UI. A GUI-driven connect passed a real handshake in CI.</p></div>
+      <div class="card rv"><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on. Not yet exercised live against Cloudflare.</p></div>
+      <div class="card rv"><h3>Kill switch<span class="tag live">In preview</span></h3><p>Firewall rules engage on connect and release on disconnect - rule presence verified in CI, including after a crashed owner process. A live traffic-blocking (leak) test is still outstanding.</p></div>
+      <div class="card rv"><h3>DNS control<span class="tag live">In preview</span></h3><p>Tunnel DNS is applied on connect and restored on disconnect - verified in CI. A surfaced error when the adapter is already gone was fixed in source.</p></div>
+      <div class="card rv"><h3>System tray<span class="tag live">In preview</span></h3><p>Close to the tray and keep the tunnel running - exercised in the CI GUI leg. Tray Quit is not verified yet; start-with-Windows autostart is on the roadmap.</p></div>
     </div>
   </div>
 </section>
