@@ -185,7 +185,10 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 @media(max-width:560px){
   .g3{grid-template-columns:1fr}
   .bench-row{grid-template-columns:1fr;gap:3px;padding:15px 18px}
-  .log time{width:88px}
+  .log li{flex-direction:column;gap:5px}
+  .log time{width:auto}
+  .badge{font-size:.68rem;align-items:flex-start;text-wrap:balance}
+  .badge .dot{margin-top:4px;flex:none}
   h1{font-size:3rem}
 }
 @media(prefers-reduced-motion:reduce){
