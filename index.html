@@ -170,7 +170,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 .copy-btn:hover{background:rgba(45,212,191,.16)}
 .copy-btn.copied{border-color:#34d399;color:#34d399}
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
-.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(92deg,rgba(4,6,12,.88) 0%,rgba(4,6,12,.62) 38%,rgba(4,6,12,.12) 62%,transparent 78%)}
+.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(92deg,rgba(4,6,12,.94) 0%,rgba(4,6,12,.78) 40%,rgba(4,6,12,.28) 62%,transparent 80%)}
 @media (max-width:759px){.hero-scrim{background:linear-gradient(180deg,rgba(4,6,12,.7) 0%,rgba(4,6,12,.45) 45%,rgba(4,6,12,.15) 100%)}}
 </style>
 </head>
@@ -567,6 +567,15 @@ function annulusSprite(rIn, rOut, dim, back){
     cg.addColorStop(1, col(255, 240, 214, .34 * dim));
     g.fillStyle = cg; g.fill();
   }
+  g.globalCompositeOperation = "destination-in";
+  var mk = g.createLinearGradient(-rOut, 0, rOut, 0);
+  mk.addColorStop(0, "rgba(0,0,0,.28)");
+  mk.addColorStop(.38, "rgba(0,0,0,.72)");
+  mk.addColorStop(.58, "rgba(0,0,0,1)");
+  mk.addColorStop(1, "rgba(0,0,0,1)");
+  g.fillStyle = mk;
+  g.fillRect(-rOut - 8, -rOut - 8, rOut * 2 + 16, rOut * 2 + 16);
+  g.globalCompositeOperation = "source-over";
   diskCache[key] = c;
   return c;
 }
@@ -612,9 +621,9 @@ function drawScene(now){
   px += (tpx - px) * .03; py += (tpy - py) * .03;
   var base = Math.min(W, H);
   var hx = isNarrow ? W * .5 : W * .645;
-  var hy = isNarrow ? H * .66 : H * .49;
-  var R = base * (isNarrow ? .22 : .235);
-  var dim = isNarrow ? .3 : 1;
+  var hy = isNarrow ? H * .66 : H * .53;
+  var R = base * (isNarrow ? .24 : .235);
+  var dim = isNarrow ? .48 : 1;
   var sc = Math.max(0, Math.min(1, (window.scrollY || 0) / Math.max(1, innerHeight)));
   var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1) + sc * .18;
   ctx2.save();
