@@ -149,9 +149,13 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-  #tunnel{display:none}
   .rv{opacity:1;transform:none}
 }
+.dl{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid var(--line);border-radius:16px;padding:22px 24px;background:linear-gradient(180deg,rgba(45,212,191,.06),rgba(255,154,60,.05))}
+.dl-info{display:flex;flex-direction:column;gap:8px;max-width:660px}
+.dl-info b{font-size:16px}
+.dl-info span{color:var(--mut);font-size:13.5px;line-height:1.6}
+.dl-info .hash{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:var(--cyan);word-break:break-all}
 </style>
 </head>
 <body>
@@ -178,10 +182,10 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 </nav>
 
 <section id="hero">
-  <div class="glow-orb" style="width:520px;height:520px;background:#35e0ff;top:-140px;left:-160px"></div>
-  <div class="glow-orb" style="width:460px;height:460px;background:#2dd4bf;bottom:-120px;right:-120px"></div>
+  <div class="glow-orb" style="width:520px;height:520px;background:#ff9a3c;top:-140px;left:-160px"></div>
+  <div class="glow-orb" style="width:460px;height:460px;background:#c2481d;bottom:-120px;right:-120px"></div>
   <div class="wrap hero-in">
-    <span class="badge"><span class="dot"></span>IN ACTIVE DEVELOPMENT - FIRST PUBLIC BUILD IN PROGRESS</span>
+    <span class="badge"><span class="dot"></span>ACTIVE DEVELOPMENT - PREVIEW BUILD PUBLISHED, RUNTIME CHECKS PENDING</span>
     <h1>wa<span class="x">X</span> VPN</h1>
     <p class="hero-sub" id="scramble" data-text="A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.">A WireGuard VPN client for Windows, written in Rust - with Cloudflare WARP support being built in. In active development, built in the open.</p>
     <div class="hero-cta">
@@ -270,7 +274,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
       <div class="metric rv"><b>-</b><span>Memory use<br>measured at release</span></div>
       <div class="metric rv"><b>-</b><span>Idle CPU<br>measured at release</span></div>
       <div class="metric rv"><b>-</b><span>Throughput<br>measured at release</span></div>
-      <div class="metric rv"><b>-</b><span>Installer size<br>measured at release</span></div>
+      <div class="metric rv"><b>9.5 MB</b><span>Installer size<br>v0.1.0-preview.6</span></div>
     </div>
   </div>
 </section>
@@ -285,16 +289,22 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
       <ul>
         <li><time>Nov 9, 23:15 IST</time><span>Project started. Goal: full WireGuard VPN client for Windows, Rust-first, WARP built in.</span></li>
         <li><time>Nov 9, 23:16 IST</time><span>Architecture settled: wax-core, wax-tunnel (wireguard-nt), wax-warp (wgcf-compatible, opt-in), wax-app desktop UI.</span></li>
-        <li><time>Nov 9, 23:26 IST</time><span>UI direction set to egui: a pure-Rust immediate-mode GUI, no WebView or browser engine. Core keys/profiles, opt-in WARP client, WireGuard-NT backend, DNS and firewall controls, CLI and GUI written. <em>Local type-checks and key/conf unit tests pass. Windows release build and runtime tests still pending - nothing is shipped.</em></span></li>
         <li><time>Nov 9, 23:20 IST</time><span>Public repo created: <a href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener" style="color:var(--cyan)">github.com/vio137/wax-vpn</a>. <em>Scaffolding in progress - no build yet.</em></span></li>
+        <li><time>Nov 9, 23:26 IST</time><span>UI direction set to egui: a pure-Rust immediate-mode GUI, no WebView or browser engine. Core keys/profiles, opt-in WARP client, WireGuard-NT backend, DNS and firewall controls, CLI and GUI written. <em>Local type-checks and key/conf unit tests pass. Windows release build and runtime tests still pending - nothing is shipped.</em></span></li>
         <li><time>Nov 9, 23:37 IST</time><span>Product icon landed (cyan/teal X arcs on navy). Site brand updated to match: icon as favicon and header mark, accent color aligned to the icon.</span></li>
         <li><time>Nov 9, 23:39 IST</time><span>Copy review: wording now separates written/type-checked code from runtime-verified behavior across hero, overview, WARP and FAQ. Speed claims removed until measured.</span></li>
         <li><time>Nov 9, 23:44 IST</time><span>Windows release binaries built and workspace tests pass; official WireGuard driver payload assembled. Installer packaging failed on a CI tooling issue (makensis path) - fix pushed, rebuild running. Runtime tunnel and GUI verification queued in CI. <em>Binaries are not a shipped app: nothing is downloadable yet.</em></span></li>
-        <li><time>Next</time><span><em>First CI build on Windows runners. v0.1.0-preview installer targeted at the first hourly checkpoint; not guaranteed until it compiles, installs and passes checks.</em></span></li>
+        <li><time>Nov 9, 23:55 IST</time><span>First preview release published: <a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.6" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.6</a> with a Windows x64 installer. CI build and NSIS packaging green; published checksum re-verified against the downloaded file. <em>Unsigned preview, requires admin. Install, tunnel, kill switch and GUI are not runtime-verified yet; WARP stays opt-in and untested live.</em></span></li>
+        <li><time>Next</time><span><em>Runtime verification on Windows: install, a real tunnel against a demo endpoint, disconnect restoration and GUI checks. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
-    <div style="margin-top:26px" class="rv">
-      <a class="btn" href="https://github.com/vio137/wax-vpn" target="_blank" rel="noopener">Star or watch the repo for releases</a>
+    <div class="dl rv" style="margin-top:26px">
+      <div class="dl-info">
+        <b>v0.1.0-preview.6 - Windows installer (x64, 9.5 MB)</b>
+        <span>Unsigned preview that needs administrator rights (it creates a network adapter). Installer launch, tunnel, kill switch and GUI rendering are not runtime-verified yet - this is a development build, not a finished VPN. Verify the checksum before running.</span>
+        <span class="hash">SHA-256&nbsp;&nbsp;c666f46d23ce448785bb6749363aaee9dc40754da82ef6e0b028ef1b08ae26d2</span>
+      </div>
+      <a class="btn" href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.6" target="_blank" rel="noopener">Get the preview</a>
     </div>
   </div>
 </section>
@@ -304,7 +314,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
     <span class="kicker rv">FAQ</span>
     <h2 class="rv">Straight answers.</h2>
     <div class="faq" style="margin-top:30px">
-      <details class="rv"><summary>Can I download waX VPN yet?</summary><div class="fa-body">Not yet. The app is in active development and the first preview installer has not shipped. Releases will appear on the <a href="https://github.com/vio137/wax-vpn/releases" target="_blank" rel="noopener">GitHub releases page</a> when they exist and pass checks. This site will link them directly, with hashes.</div></details>
+      <details class="rv"><summary>Can I download waX VPN yet?</summary><div class="fa-body">Yes - the first preview installer for Windows is out: <a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.6" target="_blank" rel="noopener">v0.1.0-preview.6</a>. It is an unsigned development build that requires administrator rights. Install, tunnel, kill switch and GUI are not runtime-verified yet, so treat it as a preview and verify the SHA-256 shown on the release page before running.</div></details>
       <details class="rv"><summary>Is it a real VPN or a proxy?</summary><div class="fa-body">waX is built to be a real system VPN: its tunnel code integrates the official WireGuard for Windows kernel driver, so all apps would route through the tunnel - not just one browser. This is not runtime-verified yet.</div></details>
       <details class="rv"><summary>What does WARP built in mean?</summary><div class="fa-body">waX includes a Rust client written to the Cloudflare WARP API (the same protocol wgcf uses), so you could create and use WARP profiles without a separate tool. It is opt-in: no registration happens until you choose it in the app. Live interop with Cloudflare is untested, and WARP use is subject to Cloudflare's own terms.</div></details>
       <details class="rv"><summary>Which platforms?</summary><div class="fa-body">Windows first and only, for now. Focusing on one platform keeps the tunnel, installer and UI polished instead of spreading thin.</div></details>
@@ -452,71 +462,139 @@ document.querySelectorAll(".btn, summary").forEach(function(el){
   el.addEventListener("click", function(){ blip(520, .08, .04); });
 });
 
-/* ---- hero tunnel canvas: particles flowing through a wire tunnel ---- */
+/* ---- hero: Gargantua-inspired black hole, fully procedural ---- */
 var cv = document.getElementById("tunnel"), ctx2 = cv.getContext("2d");
-var W = 0, H = 0, DPR = 1, running = false, rafId = null;
-var parts = [], rings = [];
+var W = 0, H = 0, DPR = 1, running = false, rafId = null, isNarrow = false;
+var stars = [], disk = [];
+var px = .5, py = .42, tpx = .5, tpy = .42;
 function sizeCanvas(){
-  DPR = Math.min(window.devicePixelRatio || 1, 1.75);
+  DPR = Math.min(window.devicePixelRatio || 1, 1.5);
   W = cv.width = Math.floor(innerWidth * DPR);
   H = cv.height = Math.floor(innerHeight * DPR);
+  isNarrow = innerWidth < 760;
 }
-function initParts(){
-  parts = []; rings = [];
-  var n = Math.min(150, Math.floor(innerWidth / 9));
-  for(var i=0;i<n;i++){
-    parts.push({a: Math.random()*Math.PI*2, r: .15 + Math.random()*.85, z: Math.random(), s: .0018 + Math.random()*.0032,
-                hue: Math.random() < .72 ? 0 : 1, w: .5 + Math.random()*1.4});
-  }
-  for(var j=0;j<9;j++){ rings.push(j/9); }
+function initScene(){
+  stars = []; disk = [];
+  var ns = Math.min(240, Math.floor(innerWidth * innerHeight / 6500));
+  for(var i = 0; i < ns; i++) stars.push({x: Math.random(), y: Math.random(), z: .3 + Math.random()*.7, r: .4 + Math.random()*1.1, tw: Math.random()*6.28});
+  var nd = Math.min(640, Math.floor(innerWidth / 1.8));
+  for(var j = 0; j < nd; j++) disk.push({a: Math.random()*6.283, r: Math.pow(Math.random(), .62), w: .6 + Math.random()*1.5, o: .3 + Math.random()*.7});
 }
-function drawTunnel(){
-  if(!running) return;
-  ctx2.clearRect(0,0,W,H);
-  var cxx = W * .5, cyy = H * .42, base = Math.min(W,H);
-  var t = performance.now() * .0001;
-  /* rings */
-  ctx2.lineWidth = 1 * DPR;
-  for(var i=0;i<rings.length;i++){
-    rings[i] += .0016;
-    if(rings[i] > 1) rings[i] -= 1;
-    var z = rings[i], rad = z*z * base * .95 + 2;
-    var alpha = .04 + z * .10;
-    var wob = Math.sin(t*8 + i) * 6 * DPR * z;
-    ctx2.strokeStyle = i % 3 === 2 ? "rgba(45,212,191," + alpha + ")" : "rgba(53,224,255," + alpha + ")";
+function col(r, g, b, a){ return "rgba(" + (r|0) + "," + (g|0) + "," + (b|0) + "," + a + ")"; }
+function drawBand(cx, cy, R, back){
+  var tilt = .30, dim = isNarrow ? .55 : 1;
+  ctx2.save();
+  ctx2.filter = "blur(" + (5 * DPR) + "px)";
+  var bands = [[1.55, .34, .30], [2.15, .52, .20], [2.85, .70, .10]];
+  for(var b = 0; b < bands.length; b++){
+    var rr = R * bands[b][0], lw = R * bands[b][1], al = bands[b][2] * dim;
+    var gr = ctx2.createLinearGradient(cx - rr, cy, cx + rr, cy);
+    gr.addColorStop(0, "rgba(255,226,180," + al + ")");
+    gr.addColorStop(.45, "rgba(255,180,100," + al * .8 + ")");
+    gr.addColorStop(1, "rgba(255,120,50," + al * .45 + ")");
+    ctx2.strokeStyle = gr; ctx2.lineWidth = lw;
     ctx2.beginPath();
-    ctx2.ellipse(cxx + wob, cyy, rad * 1.25, rad * .8, 0, 0, Math.PI*2);
+    if(back) ctx2.ellipse(cx, cy, rr, rr * tilt, 0, Math.PI, 2 * Math.PI);
+    else ctx2.ellipse(cx, cy, rr, rr * tilt, 0, 0, Math.PI);
     ctx2.stroke();
   }
-  /* particles */
-  for(var p=0;p<parts.length;p++){
-    var pt = parts[p];
-    pt.z += pt.s; pt.a += .0006;
-    if(pt.z > 1){ pt.z -= 1; pt.a = Math.random()*Math.PI*2; }
-    var pr = pt.r * (0.05 + pt.z*pt.z) * base * .8;
-    var x = cxx + Math.cos(pt.a + t*4) * pr * 1.25;
-    var y = cyy + Math.sin(pt.a + t*4) * pr * .8;
-    var sz = (0.6 + pt.z * 2.4) * pt.w * DPR;
-    var al = .12 + pt.z * .55;
-    ctx2.fillStyle = pt.hue ? "rgba(45,212,191," + al + ")" : "rgba(53,224,255," + al + ")";
-    ctx2.beginPath(); ctx2.arc(x, y, sz, 0, Math.PI*2); ctx2.fill();
-    /* short trail */
-    var tzx = cxx + Math.cos(pt.a + t*4) * (pt.r * (0.05 + Math.max(0,pt.z-.03)*(pt.z-.03)) * base * .8) * 1.25;
-    var tzy = cyy + Math.sin(pt.a + t*4) * (pt.r * (0.05 + Math.max(0,pt.z-.03)*(pt.z-.03)) * base * .8) * .8;
-    ctx2.strokeStyle = pt.hue ? "rgba(45,212,191," + (al*.5) + ")" : "rgba(53,224,255," + (al*.5) + ")";
-    ctx2.lineWidth = sz * .6;
-    ctx2.beginPath(); ctx2.moveTo(tzx, tzy); ctx2.lineTo(x, y); ctx2.stroke();
-  }
-  rafId = requestAnimationFrame(drawTunnel);
+  ctx2.restore();
 }
-function startTunnel(){ if(running || reduced) return; running = true; rafId = requestAnimationFrame(drawTunnel); }
-function stopTunnel(){ running = false; if(rafId) cancelAnimationFrame(rafId); }
-if(!reduced){
-  sizeCanvas(); initParts(); startTunnel();
-  window.addEventListener("resize", function(){ sizeCanvas(); initParts(); }, {passive:true});
-  document.addEventListener("visibilitychange", function(){
-    if(document.hidden) stopTunnel(); else startTunnel();
-  });
+function drawDisk(cx, cy, R, t, back){
+  var tilt = .30, dim = isNarrow ? .55 : 1;
+  for(var i = 0; i < disk.length; i++){
+    var p = disk[i];
+    p.a += .006 * Math.pow(1.28 / (1.28 + p.r * 1.82), 1.5);
+    var sa = Math.sin(p.a);
+    if(back ? sa >= 0 : sa < 0) continue;
+    var r = R * (1.28 + p.r * 1.82);
+    var x = cx + Math.cos(p.a) * r, y = cy + sa * r * tilt;
+    var k = p.r;
+    var dop = -Math.cos(p.a);
+    var bright = p.o * (1 + .6 * dop) * (1 - .3 * k) * dim;
+    if(bright <= .03) continue;
+    var gg = 232 - 118 * k - 46 * Math.max(0, -dop);
+    var bb = 200 - 152 * k - 96 * Math.max(0, -dop);
+    var da = .011 * (1 - .35 * k);
+    var x2 = cx + Math.cos(p.a - da) * r, y2 = cy + Math.sin(p.a - da) * r * tilt;
+    ctx2.strokeStyle = col(255, gg, bb, Math.min(bright, 1.1) * .78);
+    ctx2.lineWidth = p.w * DPR * (1.35 - .55 * k);
+    ctx2.beginPath(); ctx2.moveTo(x2, y2); ctx2.lineTo(x, y); ctx2.stroke();
+  }
+}
+// hot inner rim just outside the photon ring, in the disk plane
+function drawRim(cx, cy, R, back){
+  var dim = isNarrow ? .55 : 1;
+  var rr = R * 1.24;
+  var gr = ctx2.createLinearGradient(cx - rr, cy, cx + rr, cy);
+  gr.addColorStop(0, "rgba(255,244,224," + .85 * dim + ")");
+  gr.addColorStop(.5, "rgba(255,214,150," + .55 * dim + ")");
+  gr.addColorStop(1, "rgba(255,150,80," + .3 * dim + ")");
+  ctx2.strokeStyle = gr; ctx2.lineWidth = 2.2 * DPR;
+  ctx2.filter = "blur(" + (1.2 * DPR) + "px)";
+  ctx2.beginPath();
+  if(back) ctx2.ellipse(cx, cy, rr, rr * .30, 0, Math.PI, 2 * Math.PI);
+  else ctx2.ellipse(cx, cy, rr, rr * .30, 0, 0, Math.PI);
+  ctx2.stroke();
+  ctx2.filter = "none";
+}
+function drawScene(now){
+  if(!running) return;
+  ctx2.clearRect(0, 0, W, H);
+  px += (tpx - px) * .03; py += (tpy - py) * .03;
+  var base = Math.min(W, H);
+  var cx = (isNarrow ? W * .5 : W * .70) + (px - .5) * base * .05;
+  var cy = (isNarrow ? H * .46 : H * .44) + (py - .5) * base * .04;
+  var R = base * (isNarrow ? .155 : .15);
+  var t = now * .001;
+  ctx2.globalCompositeOperation = "source-over";
+  for(var i = 0; i < stars.length; i++){
+    var st = stars[i];
+    var sx = (st.x * W + (px - .5) * 42 * st.z * DPR) % W; if(sx < 0) sx += W;
+    var sy = (st.y * H + (py - .5) * 26 * st.z * DPR) % H; if(sy < 0) sy += H;
+    var a = .22 + .55 * st.z * (.6 + .4 * Math.sin(t * 1.2 + st.tw));
+    ctx2.fillStyle = col(208, 224, 255, a);
+    ctx2.beginPath(); ctx2.arc(sx, sy, st.r * DPR, 0, 7); ctx2.fill();
+  }
+  var amb = ctx2.createRadialGradient(cx, cy, R * .4, cx, cy, R * 4.4);
+  amb.addColorStop(0, "rgba(255,190,110,.11)"); amb.addColorStop(.5, "rgba(255,140,60,.045)"); amb.addColorStop(1, "rgba(0,0,0,0)");
+  ctx2.fillStyle = amb; ctx2.fillRect(0, 0, W, H);
+  ctx2.globalCompositeOperation = "lighter";
+  drawBand(cx, cy, R, true);
+  drawDisk(cx, cy, R, t, true);
+  drawRim(cx, cy, R, true);
+  var lg = ctx2.createLinearGradient(cx - R, cy - R * 1.6, cx + R, cy + R * 1.6);
+  lg.addColorStop(0, "rgba(255,224,178,.30)"); lg.addColorStop(.5, "rgba(255,158,80,.13)"); lg.addColorStop(1, "rgba(255,224,178,.26)");
+  ctx2.strokeStyle = lg; ctx2.lineWidth = R * .32;
+  ctx2.filter = "blur(" + (3 * DPR) + "px)";
+  ctx2.beginPath(); ctx2.ellipse(cx, cy, R * .82, R * 1.42, 0, 0, 6.283); ctx2.stroke();
+  ctx2.filter = "none";
+  ctx2.globalCompositeOperation = "source-over";
+  ctx2.strokeStyle = "rgba(255,240,218,.85)"; ctx2.lineWidth = 1.6 * DPR;
+  ctx2.shadowColor = "rgba(255,202,132,.9)"; ctx2.shadowBlur = 18 * DPR;
+  ctx2.beginPath(); ctx2.arc(cx, cy, R * 1.06, 0, 6.283); ctx2.stroke();
+  ctx2.shadowBlur = 0;
+  var eh = ctx2.createRadialGradient(cx - R * .2, cy - R * .2, R * .1, cx, cy, R * 1.02);
+  eh.addColorStop(0, "#000"); eh.addColorStop(.82, "#010204"); eh.addColorStop(1, "rgba(3,6,12,.96)");
+  ctx2.fillStyle = eh; ctx2.beginPath(); ctx2.arc(cx, cy, R * 1.01, 0, 6.283); ctx2.fill();
+  ctx2.globalCompositeOperation = "lighter";
+  drawBand(cx, cy, R, false);
+  drawDisk(cx, cy, R, t, false);
+  drawRim(cx, cy, R, false);
+  rafId = requestAnimationFrame(drawScene);
+}
+function startScene(){ if(running) return; running = true; rafId = requestAnimationFrame(drawScene); }
+function stopScene(){ running = false; if(rafId) cancelAnimationFrame(rafId); }
+sizeCanvas(); initScene();
+if(reduced){
+  running = true; drawScene(performance.now()); stopScene();
+} else {
+  startScene();
+  window.addEventListener("resize", function(){ sizeCanvas(); initScene(); }, {passive: true});
+  document.addEventListener("visibilitychange", function(){ if(document.hidden) stopScene(); else startScene(); });
+  if(finePointer){
+    document.addEventListener("pointermove", function(e){ tpx = e.clientX / innerWidth; tpy = e.clientY / innerHeight; }, {passive: true});
+  }
 }
 })();
 </script>
