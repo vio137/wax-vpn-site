@@ -201,6 +201,7 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
 .hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(92deg,rgba(4,6,12,.94) 0%,rgba(4,6,12,.78) 40%,rgba(4,6,12,.28) 62%,transparent 80%)}
 @media (max-width:759px){.hero-scrim{background:linear-gradient(180deg,rgba(4,6,12,.7) 0%,rgba(4,6,12,.45) 45%,rgba(4,6,12,.15) 100%)}}
+@media (min-width:760px) and (max-width:1080px){.hero-scrim{background:linear-gradient(92deg,rgba(4,6,12,.93) 0%,rgba(4,6,12,.84) 45%,rgba(4,6,12,.52) 70%,rgba(4,6,12,.2) 100%)}}
 </style>
 </head>
 <body>
@@ -701,9 +702,10 @@ function drawScene(now){
   px += (tpx - px) * .03; py += (tpy - py) * .03;
   var base = Math.min(W, H);
   var hx = isNarrow ? W * .5 : W * .645;
-  var hy = isNarrow ? H * .66 : H * .53;
+  var isMid = !isNarrow && innerWidth < 1080;
+  var hy = isNarrow ? H * .66 : (isMid ? H * .575 : H * .53);
   var R = base * (isNarrow ? .24 : .235);
-  var dim = isNarrow ? .48 : 1;
+  var dim = isNarrow ? .48 : (isMid ? .8 : 1);
   var sc = Math.max(0, Math.min(1, (window.scrollY || 0) / Math.max(1, innerHeight * .85)));
   var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1) + sc * .18;
   ctx2.save();
