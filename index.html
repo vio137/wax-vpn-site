@@ -32,6 +32,8 @@ h1,h2,h3{font-weight:600;letter-spacing:-.02em;line-height:1.08}
 h2{font-size:clamp(1.9rem,4vw,3rem);margin-bottom:14px}
 .sub{color:var(--dim);font-size:1.06rem;max-width:640px}
 .kicker{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:var(--cyan);margin-bottom:16px}
+section h2{transition:text-shadow .5s cubic-bezier(.22,1,.36,1)}
+section.sec-live h2{text-shadow:0 0 34px rgba(53,224,255,.22)}
 .kicker::before{content:"";width:26px;height:1px;background:var(--grad)}
 .grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 /* background fx */
@@ -361,8 +363,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 00:44 IST</time><span>Crash-leg clarified: after the tunnel owner process was killed mid-connection, the test harness ran a manual <span style="font-family:var(--mono)">wax disconnect</span> and only then verified DNS/firewall cleanup - that proves the manual recovery command works after a crash, <em>not</em> automatic crash restoration (what Windows reclaims on its own is being instrumented now). Tray/background lifecycle and the embedded exe icon are written (source 099faa0) and awaiting their first Windows compile - <em>no runtime claim yet.</em></span></li>
         <li><time>Nov 10, 00:52 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.20" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.20</a>: probing 3 seconds after the tunnel owner was killed found the adapter already gone and DNS already cleared (kill switch was OFF in that leg) - Windows tears down the adapter and its DNS automatically. <em>Firewall-rules-on-crash and leak safety remain untested.</em> The embedded icon now shows in the real Windows titlebar/taskbar (visually confirmed). Tray lifecycle is compiled but not runtime-exercised yet. Published, not promoted; preview.6 stays linked below.</span></li>
         <li><time>Nov 10, 01:07 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.22" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.22</a> (commit f84d4d6): tunnel tests passed, including the first crash leg with the kill switch ON - all four blocking rules were still in place after the owner process died, and explicit cleanup removed them. <em>Rule persistence is not proof that traffic was blocked; a live leak/blocking test is still outstanding.</em> The GUI interaction leg did not run at all - a PowerShell parser error in the workflow, fixed in 444a456 - so there is no fresh GUI runtime verification. Auto-reconnect and a profile switcher landed in source, pending build and runtime. Published, not promoted; preview.6 stays linked below.</span></li>
-        <li><time>Nov 10, 01:18 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.23" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.23</a> adds the profile picker and a first auto-reconnect, and produced the first GUI-driven runtime result: clicking Connect in the app achieved a WireGuard handshake. No console windows were observed during the connect at 100ms polling - shorter flashes could be missed. Closing the window left the process and adapter alive; Quit and reopen behavior are not verified yet. <em>The reconnect v1 in this build has known safety/cleanup issues, already corrected in source for the pending preview.24 - published, not recommended. The glass styling pass (preview.22 onward) is subtle styling over the same basic layout, not a redesign. preview.6 stays linked below.</em></span></li>
-        <li><time>Next</time><span><em>Remaining: corrected reconnect build (preview.24) with its runtime report, Quit and reopen behavior, traffic-blocking/leak test with the kill switch ON, tray lifecycle runtime check, installer launch. The download stays labelled preview until those pass.</em></span></li>
+        <li><time>Nov 10, 01:18 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.23" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.23</a> adds the profile picker and a first auto-reconnect, and produced the first GUI-driven runtime result: clicking Connect in the app achieved a WireGuard handshake. No console windows were observed during the connect at 100ms polling - shorter flashes could be missed. Closing the window left the process and adapter alive; Quit and reopen behavior are not verified yet. <em>The reconnect v1 in this build has known safety/cleanup issues with corrections in source, unverified - published, not recommended. The glass styling pass (preview.22 onward) is subtle styling over the same basic layout, not a redesign. preview.6 stays linked below.</em></span></li>
+        <li><time>Nov 10, 01:30 IST</time><span>v0.1.0-preview.24 (auto-reconnect v2 + cleanup reporting) published. Its GUI legs passed - connect, close-to-tray, and the 100ms console-window observation. One failure: the final cleanup command exited 1 - new error aggregation surfaced a previously-swallowed DNS-reset error after Windows had already reclaimed the adapter, not a verified new regression in DNS restore. A fix (8248036) treats a missing adapter as already-clean. <em>Corrections unverified; published, not recommended. preview.6 stays linked below.</em></span></li>
+        <li><time>Next</time><span><em>Remaining: the corrected build (DNS cleanup fix + the first from-scratch Gargantua interface increment, run 42688621370) with its runtime report; Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
     <div class="dl rv" style="margin-top:26px">
@@ -430,6 +433,10 @@ function onScroll(){
 }
 document.addEventListener("scroll", onScroll, {passive:true});
 onScroll();
+var secObs = new IntersectionObserver(function(es){
+  es.forEach(function(e){ e.target.classList.toggle("sec-live", e.isIntersecting); });
+}, {rootMargin: "-38% 0px -38% 0px"});
+document.querySelectorAll("section[id]").forEach(function(s){ secObs.observe(s); });
 
 /* ---- reveal on scroll ---- */
 var io = new IntersectionObserver(function(es){
@@ -488,6 +495,8 @@ if(finePointer && !reduced){
     });
   });
 }
+
+var diskTilt = .19;
 
 /* ---- cursor glow ---- */
 var cursor = document.getElementById("cursor");
@@ -644,7 +653,7 @@ function annulusSprite(rIn, rOut, dim, back){
   return c;
 }
 function drawHalf(cx, cy, R, back, dim){
-  var tilt = .19, rIn = R * 1.24, rOut = R * 4.4;
+  var tilt = diskTilt, rIn = R * 1.24, rOut = R * 4.4;
   var spr = annulusSprite(rIn, rOut, dim, back);
   ctx2.drawImage(spr, cx - spr.width / 2, cy - spr.height / 2);
   for(var i = 0; i < disk.length; i++){
@@ -701,19 +710,23 @@ function drawScene(now){
   ctx2.clearRect(0, 0, W, H);
   px += (tpx - px) * .03; py += (tpy - py) * .03;
   var base = Math.min(W, H);
-  var hx = isNarrow ? W * .5 : W * .645;
+  var doc = document.documentElement;
+  var maxSc = Math.max(1, doc.scrollHeight - innerHeight);
+  var sp = Math.max(0, Math.min(1, (window.scrollY || 0) / maxSc));
+  var jp = (!reduced && secKeys.length) ? journeyAt(sp) : secKeys[0];
+  if(!jp) jp = {x: .645, y: .53, s: 1, dim: 1, op: 1, tilt: .19};
   var isMid = !isNarrow && innerWidth < 1080;
-  var hy = isNarrow ? H * .66 : (isMid ? H * .575 : H * .53);
-  var R = base * (isNarrow ? .24 : .235);
-  var dim = isNarrow ? .48 : (isMid ? .8 : 1);
-  var sc = Math.max(0, Math.min(1, (window.scrollY || 0) / Math.max(1, innerHeight * .85)));
-  var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1) + sc * .18;
+  var hx = W * jp.x, hy = H * jp.y;
+  var R = base * (isNarrow ? .24 : .235) * jp.s;
+  var dim = jp.dim * (isMid ? .85 : 1);
+  diskTilt = jp.tilt;
+  var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1);
   ctx2.save();
   ctx2.translate(hx + (px - .5) * base * .05 + 6 * DPR * Math.sin(t * .011), hy + (py - .5) * base * .04);
   ctx2.scale(z, z);
   ctx2.translate(-hx, -hy);
-  var cx = hx + (px - .5) * base * .05, cy = hy + (py - .5) * base * .04 - sc * base * .14;
-  cv.style.opacity = (1 - sc * .84).toFixed(3);
+  var cx = hx + (px - .5) * base * .05, cy = hy + (py - .5) * base * .04;
+  cv.style.opacity = jp.op.toFixed(3);
   ctx2.globalCompositeOperation = "source-over";
   var lr = R * 3.4;
   for(var i = 0; i < stars.length; i++){
@@ -743,7 +756,7 @@ function drawScene(now){
   amb.addColorStop(0, "rgba(255,196,120,.10)"); amb.addColorStop(.55, "rgba(255,140,60,.04)"); amb.addColorStop(1, "rgba(0,0,0,0)");
   ctx2.fillStyle = amb; ctx2.fillRect(0, 0, W, H);
   ctx2.globalCompositeOperation = "lighter";
-  drawHalf(cx, cy, R, true, dim * .55);
+  drawHalf(cx, cy, Math.round(R / 3) * 3, true, Math.round(dim * 11) / 20);
   ctx2.globalCompositeOperation = "source-over";
   var eh = ctx2.createRadialGradient(cx - R * .18, cy - R * .18, R * .08, cx, cy, R * 1.02);
   eh.addColorStop(0, "#000"); eh.addColorStop(.85, "#010204"); eh.addColorStop(1, "rgba(2,5,10,.97)");
@@ -781,13 +794,60 @@ function drawScene(now){
   ctx2.strokeStyle = col(255, 196, 128, .10 * dim); ctx2.lineWidth = R * .05;
   ctx2.beginPath(); ctx2.ellipse(cx, cy, R * .83, R * 1.5, 0, 0, 6.283); ctx2.stroke();
   }
-  drawHalf(cx, cy, R, false, dim);
+  drawHalf(cx, cy, Math.round(R / 3) * 3, false, Math.round(dim * 20) / 20);
   ctx2.restore();
   rafId = requestAnimationFrame(drawScene);
 }
 function startScene(){ if(running) return; running = true; rafId = requestAnimationFrame(drawScene); }
 function stopScene(){ running = false; if(rafId) cancelAnimationFrame(rafId); }
-sizeCanvas(); initScene();
+var secKeys = [];
+function buildJourney(){
+  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq"];
+  var states = isNarrow ? [
+    {x: .5, y: .60, s: 1,   dim: .48, op: 1,   tilt: .19},
+    {x: .5, y: .80, s: .58, dim: .26, op: .3,  tilt: .23},
+    {x: .5, y: .20, s: .4,  dim: .22, op: .26, tilt: .14},
+    {x: .5, y: .72, s: .52, dim: .26, op: .28, tilt: .26},
+    {x: .5, y: .28, s: .34, dim: .18, op: .22, tilt: .16},
+    {x: .5, y: .5,  s: .28, dim: .15, op: .18, tilt: .2},
+    {x: .5, y: .44, s: .24, dim: .13, op: .16, tilt: .2}
+  ] : [
+    {x: .645, y: .53, s: 1,   dim: 1,   op: 1,   tilt: .19},
+    {x: .2,   y: .4,  s: .6,  dim: .5,  op: .4,  tilt: .24},
+    {x: .8,   y: .3,  s: .44, dim: .38, op: .34, tilt: .14},
+    {x: .86,  y: .6,  s: .68, dim: .45, op: .38, tilt: .27},
+    {x: .16,  y: .7,  s: .4,  dim: .3,  op: .3,  tilt: .16},
+    {x: .5,   y: .38, s: .32, dim: .24, op: .24, tilt: .2},
+    {x: .5,   y: .5,  s: .27, dim: .2,  op: .2,  tilt: .2}
+  ];
+  var doc = document.documentElement;
+  var max = Math.max(1, doc.scrollHeight - innerHeight);
+  secKeys = ids.map(function(id, i){
+    var el = document.getElementById(id);
+    var center = el ? el.offsetTop + el.offsetHeight / 2 - innerHeight / 2 : 0;
+    var st = states[i];
+    st.at = i === 0 ? 0 : Math.max(0, Math.min(1, center / max));
+    return st;
+  });
+}
+function journeyAt(sp){
+  if(sp <= 0 || secKeys.length < 2) return secKeys[0];
+  for(var i = 1; i < secKeys.length; i++){
+    var b = secKeys[i];
+    if(sp <= b.at){
+      var a = secKeys[i - 1];
+      var t = b.at > a.at ? (sp - a.at) / (b.at - a.at) : 1;
+      t = t * t * (3 - 2 * t);
+      return {
+        x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t,
+        s: a.s + (b.s - a.s) * t, dim: a.dim + (b.dim - a.dim) * t,
+        op: a.op + (b.op - a.op) * t, tilt: a.tilt + (b.tilt - a.tilt) * t
+      };
+    }
+  }
+  return secKeys[secKeys.length - 1];
+}
+sizeCanvas(); initScene(); buildJourney();
 if(reduced){
   running = true; drawScene(4200); stopScene();
 } else {
@@ -798,7 +858,7 @@ if(reduced){
     (function tick(){ n++; if(performance.now() - t0 < 2000) requestAnimationFrame(tick);
       else if(n / 2 < 40){ diskScale = .5; initScene(); } })();
   }, 1500);
-  window.addEventListener("resize", function(){ sizeCanvas(); initScene(); }, {passive: true});
+  window.addEventListener("resize", function(){ sizeCanvas(); initScene(); buildJourney(); }, {passive: true});
   document.addEventListener("visibilitychange", function(){ if(document.hidden) stopScene(); else startScene(); });
   if(finePointer){
     document.addEventListener("pointermove", function(e){ tpx = e.clientX / innerWidth; tpy = e.clientY / innerHeight; }, {passive: true});
