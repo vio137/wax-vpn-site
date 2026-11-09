@@ -241,7 +241,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
   <div class="wrap">
     <span class="kicker rv">Overview</span>
     <h2 class="rv">Designed as a real system VPN,<br><span class="grad-text">not a proxy in disguise.</span></h2>
-    <p class="sub rv">waX VPN is being built around the official WireGuard for Windows kernel driver, with a Rust core and a Rust-rendered interface. The driver integration is written and type-checked; live routing on Windows has not been runtime-tested yet. Every claim on this page is labeled: what exists today, and what is still on the roadmap.</p>
+    <p class="sub rv">waX VPN is being built around the official WireGuard for Windows kernel driver, with a Rust core and a Rust-rendered interface. The tunnel has passed live CI checks against the official WireGuard demo server: handshake, a ping through the tunnel, and DNS setup and restore on a clean disconnect. GUI-driven connections, leak tests and crash recovery are still being verified. Every claim on this page is labeled: what is verified, and what is still on the roadmap.</p>
     <div class="grid g3" style="margin-top:40px">
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M13 2 4.5 13.5H11L9.5 22 19 9.5h-6.5z" stroke-linejoin="round"/></svg></div>
@@ -251,7 +251,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><path d="M12 2 20 6v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z" stroke-linejoin="round"/><path d="M8.5 12l2.4 2.4L15.5 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>Real WireGuard tunnel</h3>
-        <p>Tunnel code targets the official WireGuard for Windows kernel driver through the wireguard-nt Rust crate - a real system VPN design, not a browser trick or userspace packet relay. Runtime verification on Windows is pending.</p>
+        <p>Tunnel code drives the official WireGuard for Windows kernel driver through the wireguard-nt Rust crate - a real system VPN design, not a browser trick or userspace packet relay. Live handshake and a through-tunnel ping are verified in CI; GUI-driven connect is still pending.</p>
       </div>
       <div class="card rv">
         <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#35e0ff" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1" stroke-linecap="round"/></svg></div>
