@@ -106,6 +106,8 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .layer+.layer{margin-top:26px}
 .layer+.layer::before{content:"";position:absolute;top:-27px;left:44px;width:2px;height:26px;background:linear-gradient(var(--cyan),var(--violet));opacity:.6}
 .layer .ln{font-family:var(--mono);font-size:.68rem;color:var(--cyan);letter-spacing:.02em;width:78px;flex:none}
+#archflow{width:100%;height:120px;display:block;margin:2px 0 18px}
+.layer.live{border-color:rgba(53,224,255,.55);background:rgba(20,30,56,.85)}
 .layer h4{font-size:1rem}
 .layer p{color:var(--dim);font-size:.85rem}
 /* perf */
@@ -292,6 +294,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
     <span class="kicker rv">Architecture</span>
     <h2 class="rv">Four crates, one tunnel.</h2>
     <p class="sub rv">The planned workspace layout. Each layer is a separate Rust crate with a single job. <span class="tag plan">Planned</span></p>
+    <canvas id="archflow" aria-hidden="true"></canvas>
     <div class="arch">
       <div class="layer rv"><span class="ln">wax-app</span><div><h4>Interface - egui native GUI</h4><p>Animated immediate-mode desktop interface written entirely in Rust. No WebView, no browser engine bundled.</p></div></div>
       <div class="layer rv"><span class="ln">wax-core</span><div><h4>Profiles and keys</h4><p>WireGuard config parsing, key generation and profile storage.</p></div></div>
@@ -354,7 +357,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 00:41 IST</time><span>Candidate <a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.19" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.19</a> passed a deeper CI leg: handshake plus a real ping through the tunnel to the demo server's tunnel address (first through-tunnel data-path proof), DNS setup and graceful restoration, and an explicit kill-switch leg - four blocking rules present while connected, removed on disconnect. <em>Rule presence is not a traffic-blocking/leak test. Simulated-crash behavior is still being clarified - no automatic crash-recovery claim. The console-popup fix is in code but a popup-free GUI connect is not visually confirmed; tray/background running and the app icon are known gaps. Not promoted; preview.6 stays linked below.</em></span></li>
         <li><time>Nov 10, 00:44 IST</time><span>Crash-leg clarified: after the tunnel owner process was killed mid-connection, the test harness ran a manual <span style="font-family:var(--mono)">wax disconnect</span> and only then verified DNS/firewall cleanup - that proves the manual recovery command works after a crash, <em>not</em> automatic crash restoration (what Windows reclaims on its own is being instrumented now). Tray/background lifecycle and the embedded exe icon are written (source 099faa0) and awaiting their first Windows compile - <em>no runtime claim yet.</em></span></li>
         <li><time>Nov 10, 00:52 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.20" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.20</a>: probing 3 seconds after the tunnel owner was killed found the adapter already gone and DNS already cleared (kill switch was OFF in that leg) - Windows tears down the adapter and its DNS automatically. <em>Firewall-rules-on-crash and leak safety remain untested.</em> The embedded icon now shows in the real Windows titlebar/taskbar (visually confirmed). Tray lifecycle is compiled but not runtime-exercised yet. Published, not promoted; preview.6 stays linked below.</span></li>
-        <li><time>Next</time><span><em>Remaining: tray lifecycle runtime check, GUI-driven connect with console census, kill-switch leak/blocking test including a crash with the kill switch ON, installer launch. The download stays labelled preview until those pass.</em></span></li>
+        <li><time>Nov 10, 01:07 IST</time><span><a href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.0-preview.22" target="_blank" rel="noopener" style="color:var(--cyan)">v0.1.0-preview.22</a> (commit f84d4d6): tunnel tests passed, including the first crash leg with the kill switch ON - all four blocking rules were still in place after the owner process died, and explicit cleanup removed them. <em>Rule persistence is not proof that traffic was blocked; a live leak/blocking test is still outstanding.</em> The GUI interaction leg did not run at all - a PowerShell parser error in the workflow, fixed in 444a456 - so there is no fresh GUI runtime verification. Auto-reconnect and a profile switcher landed in source, pending build and runtime. Published, not promoted; preview.6 stays linked below.</span></li>
+        <li><time>Next</time><span><em>Remaining: GUI interaction leg rerun after the workflow parser fix, traffic-blocking/leak test with the kill switch ON, tray lifecycle runtime check, installer launch, auto-reconnect and profile switcher build + runtime. The download stays labelled preview until those pass.</em></span></li>
       </ul>
     </div>
     <div class="dl rv" style="margin-top:26px">
@@ -805,6 +809,89 @@ if(reduced){
     mpl.querySelectorAll("a").forEach(function(a){ a.addEventListener("click", closeMenu); });
     document.addEventListener("click", function(e){ if(mpl.classList.contains("open") && !mpl.contains(e.target)) closeMenu(); });
   }
+  (function(){
+    var fc = document.getElementById("archflow");
+    if(!fc) return;
+    var fx = fc.getContext("2d");
+    var fw = 0, fh = 0, nodes = [], packets = [], visible = false, frun = false, last = 0, spawnAt = 0;
+    var layers = Array.prototype.slice.call(document.querySelectorAll("#arch .layer"));
+    var NAMES = ["wax-app", "wax-core", "wax-tunnel", "wax-warp"];
+    function pathY(x){ return fh * .42 + Math.sin(x / fw * Math.PI * 2 + .6) * fh * .13; }
+    function size(){
+      var r = fc.getBoundingClientRect();
+      fw = Math.max(1, r.width); fh = Math.max(1, r.height);
+      fc.width = fw * DPR; fc.height = fh * DPR;
+      fx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      nodes = NAMES.map(function(n, i){ return {x: fw * (.08 + .84 * i / (NAMES.length - 1)), f: 0, name: n, hit: {}}; });
+    }
+    function drawFrame(dt){
+      fx.clearRect(0, 0, fw, fh);
+      var grad = fx.createLinearGradient(0, 0, fw, 0);
+      grad.addColorStop(0, "rgba(53,224,255,.45)");
+      grad.addColorStop(1, "rgba(139,124,255,.45)");
+      fx.strokeStyle = grad; fx.lineWidth = 1.2;
+      fx.beginPath();
+      for(var sx = 0; sx <= fw; sx += 6){ var sy = pathY(sx); if(sx === 0) fx.moveTo(sx, sy); else fx.lineTo(sx, sy); }
+      fx.stroke();
+      for(var i = packets.length - 1; i >= 0; i--){
+        var p = packets[i];
+        p.x += dt * p.v;
+        if(p.x > fw + 8){ packets.splice(i, 1); continue; }
+        var py = pathY(p.x);
+        for(var j = 0; j < nodes.length; j++){
+          var n = nodes[j];
+          if(Math.abs(p.x - n.x) < 5 && !p.hit[j]){ p.hit[j] = 1; n.f = 1; pulse(j); }
+        }
+        var gl = fx.createRadialGradient(p.x, py, 0, p.x, py, 7);
+        gl.addColorStop(0, "rgba(190,245,255,.95)");
+        gl.addColorStop(.4, "rgba(53,224,255,.55)");
+        gl.addColorStop(1, "rgba(53,224,255,0)");
+        fx.fillStyle = gl;
+        fx.beginPath(); fx.arc(p.x, py, 7, 0, 7); fx.fill();
+      }
+      fx.font = "10px 'JetBrains Mono', monospace";
+      fx.textAlign = "center";
+      for(var k = 0; k < nodes.length; k++){
+        var nd = nodes[k], ny = pathY(nd.x);
+        nd.f = Math.max(0, nd.f - dt * .0016);
+        fx.fillStyle = col(53, 224, 255, .25 + nd.f * .7);
+        fx.beginPath(); fx.arc(nd.x, ny, 3 + nd.f * 3, 0, 7); fx.fill();
+        fx.strokeStyle = col(53, 224, 255, .35 + nd.f * .6);
+        fx.lineWidth = 1;
+        fx.beginPath(); fx.arc(nd.x, ny, 6.5 + nd.f * 5, 0, 7); fx.stroke();
+        fx.fillStyle = col(139, 157, 194, .85);
+        fx.fillText(nd.name, nd.x, ny + 24);
+      }
+    }
+    var liveTimers = {};
+    function pulse(j){
+      var el = layers[j]; if(!el) return;
+      el.classList.add("live");
+      clearTimeout(liveTimers[j]);
+      liveTimers[j] = setTimeout(function(){ el.classList.remove("live"); }, 380);
+    }
+    function loop(now){
+      if(!visible || document.hidden){ frun = false; return; }
+      var dt = Math.min(50, now - last); last = now;
+      if(now >= spawnAt){ packets.push({x: -8, v: .13 + Math.random() * .06, hit: {}}); spawnAt = now + 900 + Math.random() * 1400; }
+      drawFrame(dt);
+      requestAnimationFrame(loop);
+    }
+    function kick(){
+      if(reduced){ drawFrame(16); return; }
+      if(!frun && visible && !document.hidden){ frun = true; last = performance.now(); spawnAt = 0; requestAnimationFrame(loop); }
+    }
+    size();
+    window.addEventListener("resize", function(){ size(); if(reduced) drawFrame(16); });
+    if(reduced){ drawFrame(16); }
+    else{
+      new IntersectionObserver(function(es){ visible = es[0].isIntersecting; kick(); }, {threshold: .1}).observe(fc);
+      document.addEventListener("visibilitychange", kick);
+    }
+    layers.forEach(function(el, j){
+      el.addEventListener("pointerenter", function(){ if(nodes[j]) nodes[j].f = 1; if(reduced) drawFrame(16); });
+    });
+  })();
 }
 })();
 </script>
