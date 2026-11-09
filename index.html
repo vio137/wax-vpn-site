@@ -443,8 +443,10 @@ if(finePointer && !reduced){
   var cx = -400, cy = -400, tx = cx, ty = cy;
   document.addEventListener("pointermove", function(e){ tx = e.clientX; ty = e.clientY; }, {passive:true});
   (function moveCursor(){
-    cx += (tx - cx) * .12; cy += (ty - cy) * .12;
-    cursor.style.left = cx + "px"; cursor.style.top = cy + "px";
+    if(!document.hidden){
+      cx += (tx - cx) * .12; cy += (ty - cy) * .12;
+      cursor.style.left = cx + "px"; cursor.style.top = cy + "px";
+    }
     requestAnimationFrame(moveCursor);
   })();
 } else { cursor.style.display = "none"; }
@@ -517,48 +519,58 @@ faqItems.forEach(function(d){
 /* ---- hero: Gargantua-inspired black hole, fully procedural ---- */
 var cv = document.getElementById("tunnel"), ctx2 = cv.getContext("2d");
 var W = 0, H = 0, DPR = 1, running = false, rafId = null, isNarrow = false;
-var stars = [], disk = [];
+var stars = [], disk = [], diskScale = 1;
 var px = .5, py = .42, tpx = .5, tpy = .42;
 function sizeCanvas(){
   DPR = Math.min(window.devicePixelRatio || 1, 1.5);
   W = cv.width = Math.floor(innerWidth * DPR);
   H = cv.height = Math.floor(innerHeight * DPR);
   isNarrow = innerWidth < 760;
+  if(typeof diskCache !== "undefined"){ for(var k in diskCache) delete diskCache[k]; }
 }
 function initScene(){
   stars = []; disk = [];
   var ns = Math.min(300, Math.floor(innerWidth * innerHeight / 5500));
   for(var i = 0; i < ns; i++) stars.push({x: Math.random(), y: Math.random(), z: .3 + Math.random()*.7, r: .35 + Math.random()*1.2, tw: Math.random()*6.28});
-  var nd = Math.min(1500, Math.floor(innerWidth * 1.15));
+  var nd = Math.floor(Math.min(1500, innerWidth * 1.15) * diskScale);
   for(var j = 0; j < nd; j++) disk.push({a: Math.random()*6.283, r: Math.pow(Math.random(), 1.6), w: .5 + Math.random()*1.3, o: .35 + Math.random()*.65});
 }
 function col(r, g, b, a){ return "rgba(" + (r|0) + "," + (g|0) + "," + (b|0) + "," + a + ")"; }
-function drawHalf(cx, cy, R, back, dim){
-  var tilt = .30, rIn = R * 1.24, rOut = R * 3.2;
-  ctx2.save();
-  ctx2.translate(cx, cy);
-  ctx2.scale(1, tilt);
-  ctx2.beginPath();
-  if(back){ ctx2.arc(0, 0, rOut, Math.PI, 2 * Math.PI); ctx2.arc(0, 0, rIn, 2 * Math.PI, Math.PI, true); }
-  else { ctx2.arc(0, 0, rOut, 0, Math.PI); ctx2.arc(0, 0, rIn, Math.PI, 0, true); }
-  ctx2.closePath();
-  var rg = ctx2.createRadialGradient(0, 0, rIn * .9, 0, 0, rOut);
+var diskCache = {};
+function annulusSprite(rIn, rOut, dim, back){
+  var key = (back ? "b" : "f") + Math.round(rIn) + "_" + Math.round(rOut) + "_" + dim;
+  if(diskCache[key]) return diskCache[key];
+  var pad = 4, wpx = Math.ceil(rOut * 2 + pad * 2), hpx = Math.ceil(rOut * .30 * 2 + pad * 2);
+  var c = document.createElement("canvas"); c.width = wpx; c.height = hpx;
+  var g = c.getContext("2d");
+  g.translate(wpx / 2, hpx / 2); g.scale(1, .30);
+  g.beginPath();
+  if(back){ g.arc(0, 0, rOut, Math.PI, 2 * Math.PI); g.arc(0, 0, rIn, 2 * Math.PI, Math.PI, true); }
+  else { g.arc(0, 0, rOut, 0, Math.PI); g.arc(0, 0, rIn, Math.PI, 0, true); }
+  g.closePath();
+  var rg = g.createRadialGradient(0, 0, rIn * .9, 0, 0, rOut);
   rg.addColorStop(0, col(255, 244, 226, .62 * dim));
   rg.addColorStop(.18, col(255, 208, 140, .40 * dim));
   rg.addColorStop(.45, col(255, 158, 74, .22 * dim));
   rg.addColorStop(.75, col(224, 106, 40, .10 * dim));
   rg.addColorStop(1, col(160, 60, 24, 0));
-  ctx2.fillStyle = rg; ctx2.fill();
-  if(ctx2.createConicGradient){
-    var cg = ctx2.createConicGradient(0, 0, 0);
+  g.fillStyle = rg; g.fill();
+  if(g.createConicGradient){
+    var cg = g.createConicGradient(0, 0, 0);
     cg.addColorStop(0, col(255, 240, 214, .34 * dim));
     cg.addColorStop(.25, col(255, 190, 110, .12 * dim));
     cg.addColorStop(.5, col(200, 90, 40, .02 * dim));
     cg.addColorStop(.75, col(255, 190, 110, .12 * dim));
     cg.addColorStop(1, col(255, 240, 214, .34 * dim));
-    ctx2.fillStyle = cg; ctx2.fill();
+    g.fillStyle = cg; g.fill();
   }
-  ctx2.restore();
+  diskCache[key] = c;
+  return c;
+}
+function drawHalf(cx, cy, R, back, dim){
+  var tilt = .30, rIn = R * 1.24, rOut = R * 3.2;
+  var spr = annulusSprite(rIn, rOut, dim, back);
+  ctx2.drawImage(spr, cx - spr.width / 2, cy - spr.height / 2);
   for(var i = 0; i < disk.length; i++){
     var p = disk[i];
     p.a += .0055 * Math.pow(1.26 / (1.26 + p.r * 1.9), 1.5);
@@ -664,6 +676,12 @@ if(reduced){
   running = true; drawScene(4200); stopScene();
 } else {
   startScene();
+  setTimeout(function(){
+    if(!running) return;
+    var n = 0, t0 = performance.now();
+    (function tick(){ n++; if(performance.now() - t0 < 2000) requestAnimationFrame(tick);
+      else if(n / 2 < 40){ diskScale = .5; initScene(); } })();
+  }, 1500);
   window.addEventListener("resize", function(){ sizeCanvas(); initScene(); }, {passive: true});
   document.addEventListener("visibilitychange", function(){ if(document.hidden) stopScene(); else startScene(); });
   if(finePointer){
