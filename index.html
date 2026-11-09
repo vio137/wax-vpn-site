@@ -133,6 +133,10 @@ h1 .x{display:inline-block;background:var(--grad);-webkit-background-clip:text;b
 .log li:last-child{border-bottom:none}
 .log time{font-family:var(--mono);font-size:.74rem;color:var(--cyan);flex:none;width:118px}
 .log li em{font-style:normal;color:var(--dim)}
+.log li.old{display:none}
+.log.show-all li.old{display:flex}
+.log-toggle{width:100%;padding:13px;background:none;border:none;border-top:1px solid var(--line);color:var(--cyan);font-family:var(--mono);font-size:.78rem;cursor:pointer;letter-spacing:.04em;transition:background .2s}
+.log-toggle:hover{background:rgba(53,224,255,.05)}
 .log a{text-decoration:none;border-bottom:1px solid rgba(53,224,255,.35);transition:border-color .2s,color .2s;padding-bottom:1px}
 .log a:hover{color:#7dedff;border-bottom-color:#7dedff}
 #toTop{position:fixed;left:22px;bottom:22px;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:rgba(10,15,28,.85);backdrop-filter:blur(10px);color:var(--dim);font-family:var(--mono);font-size:1rem;cursor:pointer;z-index:40;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .3s,transform .3s,color .2s,border-color .2s}
@@ -402,6 +406,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
         <li><time>Nov 10, 01:43 IST</time><span>GUI-leg reconciliation done against the actual verify-result artifacts: previews .23 and .24 literally passed - click-driven WireGuard handshake, window close leaving the process and adapter alive, and the 100ms console-window observation - with tray Quit recorded only as a WARN. preview.25's Connect-locator miss is a separate, later failure; the locator fix ships in preview.26.</span></li>
         <li><time>Next</time><span><em>Remaining: the from-scratch app UI redesign; Quit and reopen behavior; traffic-blocking/leak test with the kill switch ON; installer launch on a clean machine; a live WARP test against Cloudflare.</em></span></li>
       </ul>
+      <button class="log-toggle" id="logToggle">Show full history</button>
     </div>
     <div class="dl rv" style="margin-top:26px">
       <div class="dl-info">
@@ -607,6 +612,23 @@ if(finePointer && !reduced){
     b.addEventListener("pointerleave", function(){ b.style.transform = ""; });
   });
 }
+
+/* ---- devlog: collapse older entries behind a toggle ---- */
+(function(){
+  var logToggle = document.getElementById('logToggle');
+  var logEl = document.querySelector('.log');
+  if(!logToggle || !logEl) return;
+  var lis = logEl.querySelectorAll('ul li');
+  var keep = 5, hidden = 0;
+  lis.forEach(function(li, i){ if(i < lis.length - 1 - keep){ li.classList.add('old'); hidden++; } });
+  if(hidden === 0){ logToggle.style.display = 'none'; return; }
+  function label(open){ return open ? 'Show latest only' : ('Show full history - ' + hidden + ' earlier entries'); }
+  logToggle.textContent = label(false);
+  logToggle.addEventListener('click', function(){
+    var open = logEl.classList.toggle('show-all');
+    logToggle.textContent = label(open);
+  });
+})();
 
 /* ---- FAQ smooth expand/collapse ---- */
 document.querySelectorAll('.faq details').forEach(function(d){
@@ -1073,4 +1095,4 @@ if(reduced){
 })();
 </script>
 </body>
-</html>
+                                                                     </html>
