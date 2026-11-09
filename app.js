@@ -451,7 +451,7 @@ function buildJourney(){
     {x: .5, y: .28, s: .34, dim: .18, op: .22, tilt: .16},
     {x: .5, y: .5,  s: .28, dim: .15, op: .18, tilt: .2},
     {x: .5, y: .44, s: .24, dim: .13, op: .16, tilt: .2},
-    {x: .5, y: .48, s: .3,  dim: .26, op: .28, tilt: .2}
+    {x: .5, y: .47, s: .42, dim: .42, op: .42, tilt: .2}
   ] : [
     {x: .645, y: .53, s: 1,   dim: 1,   op: 1,   tilt: .19},
     {x: .84,  y: .34, s: .46, dim: .4,  op: .34, tilt: .2},
