@@ -519,6 +519,9 @@ var railLinks = [];
     rail.appendChild(a);
     railLinks.push(a);
   });
+  var fill = document.createElement("span");
+  fill.className = "fill";
+  rail.insertBefore(fill, rail.firstChild);
   document.body.appendChild(rail);
   function updateRail(){
     if(!secKeys.length) return;
@@ -530,9 +533,12 @@ var railLinks = [];
       var mid = (secKeys[i - 1].at + secKeys[i].at) / 2;
       if(sp >= mid) on = i;
     }
+    fill.style.transform = "scaleY(" + sp + ")";
     railLinks.forEach(function(a, i){
       a.classList.toggle("on", i === on);
       a.classList.toggle("past", i < on);
+      if(i === on) a.setAttribute("aria-current", "location");
+      else a.removeAttribute("aria-current");
     });
   }
   document.addEventListener("scroll", updateRail, {passive: true});
