@@ -442,7 +442,7 @@ function startScene(){ if(running) return; running = true; rafId = requestAnimat
 function stopScene(){ running = false; if(rafId) cancelAnimationFrame(rafId); }
 var secKeys = [];
 function buildJourney(){
-  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq"];
+  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq", "cta"];
   var states = isNarrow ? [
     {x: .5, y: .60, s: 1,   dim: .48, op: 1,   tilt: .19},
     {x: .5, y: .80, s: .58, dim: .26, op: .3,  tilt: .23},
@@ -450,7 +450,8 @@ function buildJourney(){
     {x: .5, y: .72, s: .52, dim: .26, op: .28, tilt: .26},
     {x: .5, y: .28, s: .34, dim: .18, op: .22, tilt: .16},
     {x: .5, y: .5,  s: .28, dim: .15, op: .18, tilt: .2},
-    {x: .5, y: .44, s: .24, dim: .13, op: .16, tilt: .2}
+    {x: .5, y: .44, s: .24, dim: .13, op: .16, tilt: .2},
+    {x: .5, y: .48, s: .3,  dim: .26, op: .28, tilt: .2}
   ] : [
     {x: .645, y: .53, s: 1,   dim: 1,   op: 1,   tilt: .19},
     {x: .84,  y: .34, s: .46, dim: .4,  op: .34, tilt: .2},
@@ -458,7 +459,8 @@ function buildJourney(){
     {x: .77,  y: .56, s: .56, dim: .42, op: .36, tilt: .24},
     {x: .16,  y: .7,  s: .4,  dim: .3,  op: .3,  tilt: .16},
     {x: .5,   y: .38, s: .32, dim: .24, op: .24, tilt: .2},
-    {x: .5,   y: .5,  s: .27, dim: .2,  op: .2,  tilt: .2}
+    {x: .5,   y: .5,  s: .27, dim: .2,  op: .2,  tilt: .2},
+    {x: .5,   y: .52, s: .44, dim: .5,  op: .44, tilt: .19}
   ];
   var doc = document.documentElement;
   var max = Math.max(1, doc.scrollHeight - innerHeight);
@@ -492,8 +494,8 @@ sizeCanvas(); initScene(); buildJourney();
 /* ---- journey rail: section-aware progress nav ---- */
 var railLinks = [];
 (function initJourneyRail(){
-  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq"];
-  var labels = ["Intro", "Overview", "Architecture", "Features", "Performance", "Status", "FAQ"];
+  var ids = ["hero", "about", "arch", "features", "perf", "status", "faq", "cta"];
+  var labels = ["Intro", "Overview", "Architecture", "Features", "Performance", "Status", "FAQ", "Get started"];
   var rail = document.createElement("div");
   rail.className = "jrail";
   rail.setAttribute("role", "navigation");
