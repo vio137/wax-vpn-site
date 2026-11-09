@@ -224,6 +224,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 
 /* journey rail: section-aware progress nav (desktop) */
 .jrail{position:fixed;right:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:17px;z-index:45}
+.jrail .fill{position:absolute;right:5px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,var(--cyan),var(--violet));transform-origin:top;transform:scaleY(0);box-shadow:0 0 6px rgba(53,224,255,.55);pointer-events:none}
 .jrail::before{content:"";position:absolute;right:5px;top:6px;bottom:6px;width:1px;background:linear-gradient(180deg,transparent,rgba(120,170,255,.22),transparent)}
 .jrail a{display:flex;align-items:center;gap:10px;justify-content:flex-end;text-decoration:none;position:relative}
 .jrail .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);opacity:0;transform:translateX(6px);transition:opacity .25s,transform .25s,color .25s;pointer-events:none;white-space:nowrap}
