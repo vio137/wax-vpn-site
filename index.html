@@ -52,7 +52,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .btn.primary:hover{box-shadow:0 10px 34px -6px rgba(53,224,255,.55)}
 .btn.sm{padding:8px 16px;font-size:.84rem;border-radius:10px}
 /* hero */
-#hero{min-height:100svh;display:flex;align-items:center;padding-top:120px}
+#hero{min-height:100svh;display:flex;align-items:center;padding-top:120px;position:relative;overflow:hidden}
 .hero-in{position:relative}
 .badge{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:99px;border:1px solid rgba(255,180,84,.4);background:rgba(255,180,84,.08);font-family:var(--mono);font-size:.76rem;color:var(--amber);margin-bottom:26px}
 .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:pulse 1.6s infinite}
@@ -170,6 +170,8 @@ footer{border-top:1px solid var(--line);padding:44px 0 60px;color:var(--dim);fon
 .copy-btn:hover{background:rgba(45,212,191,.16)}
 .copy-btn.copied{border-color:#34d399;color:#34d399}
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:2px;border-radius:4px}
+.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(92deg,rgba(4,6,12,.88) 0%,rgba(4,6,12,.62) 38%,rgba(4,6,12,.12) 62%,transparent 78%)}
+@media (max-width:759px){.hero-scrim{background:linear-gradient(180deg,rgba(4,6,12,.7) 0%,rgba(4,6,12,.45) 45%,rgba(4,6,12,.15) 100%)}}
 </style>
 </head>
 <body>
@@ -196,6 +198,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 </nav>
 
 <section id="hero">
+  <div class="hero-scrim"></div>
   <div class="glow-orb" style="width:520px;height:520px;background:#ff9a3c;top:-140px;left:-160px"></div>
   <div class="glow-orb" style="width:460px;height:460px;background:#c2481d;bottom:-120px;right:-120px"></div>
   <div class="wrap hero-in">
@@ -540,10 +543,10 @@ var diskCache = {};
 function annulusSprite(rIn, rOut, dim, back){
   var key = (back ? "b" : "f") + Math.round(rIn) + "_" + Math.round(rOut) + "_" + dim;
   if(diskCache[key]) return diskCache[key];
-  var pad = 4, wpx = Math.ceil(rOut * 2 + pad * 2), hpx = Math.ceil(rOut * .30 * 2 + pad * 2);
+  var pad = 4, wpx = Math.ceil(rOut * 2 + pad * 2), hpx = Math.ceil(rOut * .19 * 2 + pad * 2);
   var c = document.createElement("canvas"); c.width = wpx; c.height = hpx;
   var g = c.getContext("2d");
-  g.translate(wpx / 2, hpx / 2); g.scale(1, .30);
+  g.translate(wpx / 2, hpx / 2); g.scale(1, .19);
   g.beginPath();
   if(back){ g.arc(0, 0, rOut, Math.PI, 2 * Math.PI); g.arc(0, 0, rIn, 2 * Math.PI, Math.PI, true); }
   else { g.arc(0, 0, rOut, 0, Math.PI); g.arc(0, 0, rIn, Math.PI, 0, true); }
@@ -568,7 +571,7 @@ function annulusSprite(rIn, rOut, dim, back){
   return c;
 }
 function drawHalf(cx, cy, R, back, dim){
-  var tilt = .30, rIn = R * 1.24, rOut = R * 3.2;
+  var tilt = .19, rIn = R * 1.24, rOut = R * 4.4;
   var spr = annulusSprite(rIn, rOut, dim, back);
   ctx2.drawImage(spr, cx - spr.width / 2, cy - spr.height / 2);
   for(var i = 0; i < disk.length; i++){
@@ -576,7 +579,7 @@ function drawHalf(cx, cy, R, back, dim){
     p.a += .0055 * Math.pow(1.26 / (1.26 + p.r * 1.9), 1.5);
     var sa = Math.sin(p.a);
     if(back ? sa >= 0 : sa < 0) continue;
-    var r = R * (1.26 + p.r * 1.9);
+    var r = R * (1.26 + p.r * 3.14);
     var x = cx + Math.cos(p.a) * r, y = cy + sa * r * tilt;
     var k = p.r;
     var dop = -Math.cos(p.a);
@@ -608,16 +611,18 @@ function drawScene(now){
   ctx2.clearRect(0, 0, W, H);
   px += (tpx - px) * .03; py += (tpy - py) * .03;
   var base = Math.min(W, H);
-  var hx = isNarrow ? W * .5 : W * .70;
-  var hy = isNarrow ? H * .68 : H * .44;
-  var R = base * (isNarrow ? .155 : .15);
+  var hx = isNarrow ? W * .5 : W * .645;
+  var hy = isNarrow ? H * .66 : H * .49;
+  var R = base * (isNarrow ? .22 : .235);
   var dim = isNarrow ? .3 : 1;
-  var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1);
+  var sc = Math.max(0, Math.min(1, (window.scrollY || 0) / Math.max(1, innerHeight)));
+  var z = 1 + .028 * Math.sin(t * .045) + .016 * Math.sin(t * .017 + 2.1) + sc * .18;
   ctx2.save();
   ctx2.translate(hx + (px - .5) * base * .05 + 6 * DPR * Math.sin(t * .011), hy + (py - .5) * base * .04);
   ctx2.scale(z, z);
   ctx2.translate(-hx, -hy);
-  var cx = hx + (px - .5) * base * .05, cy = hy + (py - .5) * base * .04;
+  var cx = hx + (px - .5) * base * .05, cy = hy + (py - .5) * base * .04 - sc * base * .14;
+  cv.style.opacity = (1 - sc * .55).toFixed(3);
   ctx2.globalCompositeOperation = "source-over";
   for(var i = 0; i < stars.length; i++){
     var st = stars[i];
@@ -637,6 +642,7 @@ function drawScene(now){
   eh.addColorStop(0, "#000"); eh.addColorStop(.85, "#010204"); eh.addColorStop(1, "rgba(2,5,10,.97)");
   ctx2.fillStyle = eh; ctx2.beginPath(); ctx2.arc(cx, cy, R * 1.005, 0, 6.283); ctx2.fill();
   ctx2.save();
+  if(!isNarrow){
   ctx2.beginPath(); ctx2.arc(cx, cy, R * .985, 0, 6.283); ctx2.clip();
   var limb = ctx2.createLinearGradient(cx - R, cy, cx + R, cy);
   limb.addColorStop(0, "rgba(255,196,120," + .34 * dim + ")");
@@ -644,6 +650,7 @@ function drawScene(now){
   limb.addColorStop(1, "rgba(0,0,0,0)");
   ctx2.strokeStyle = limb; ctx2.lineWidth = R * .1;
   ctx2.beginPath(); ctx2.arc(cx, cy, R * .94, Math.PI * .45, Math.PI * 1.55); ctx2.stroke();
+  }
   ctx2.restore();
   var pulse = .8 + .18 * Math.sin(t * .9);
   ctx2.strokeStyle = "rgba(255,242,224," + .9 * pulse * dim + ")";
@@ -656,6 +663,7 @@ function drawScene(now){
   lg.addColorStop(0, col(255, 236, 200, .62 * dim));
   lg.addColorStop(.5, col(255, 172, 92, .30 * dim));
   lg.addColorStop(1, col(255, 236, 200, .56 * dim));
+  if(!isNarrow){
   ctx2.strokeStyle = lg; ctx2.lineWidth = 1.7 * DPR;
   ctx2.shadowColor = "rgba(255,190,110,.85)"; ctx2.shadowBlur = 7 * DPR;
   ctx2.beginPath(); ctx2.ellipse(cx, cy, R * .78, R * 1.42, 0, 0, 6.283); ctx2.stroke();
@@ -665,6 +673,7 @@ function drawScene(now){
   ctx2.shadowBlur = 0;
   ctx2.strokeStyle = col(255, 196, 128, .10 * dim); ctx2.lineWidth = R * .05;
   ctx2.beginPath(); ctx2.ellipse(cx, cy, R * .83, R * 1.5, 0, 0, 6.283); ctx2.stroke();
+  }
   drawHalf(cx, cy, R, false, dim);
   ctx2.restore();
   rafId = requestAnimationFrame(drawScene);
