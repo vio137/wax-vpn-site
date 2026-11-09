@@ -232,5 +232,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .jrail .dot{width:7px;height:7px;border-radius:50%;background:rgba(142,162,200,.4);border:1px solid rgba(120,170,255,.25);transition:background .3s,box-shadow .3s,transform .3s;flex:none}
 .jrail a.past .dot{background:rgba(142,162,200,.78)}
 .jrail a.on .dot{background:var(--cyan);border-color:transparent;box-shadow:0 0 10px rgba(53,224,255,.9);transform:scale(1.35)}
+.jrail a:focus-visible{outline:none}
+.jrail a:focus-visible .dot{background:var(--cyan);border-color:transparent;box-shadow:0 0 10px rgba(53,224,255,.9);transform:scale(1.35)}
+.jrail a:focus-visible .lbl{opacity:1;transform:none;color:var(--cyan)}
 @media(max-width:900px){.jrail{display:none}}
 @media(prefers-reduced-motion:reduce){.jrail .lbl,.jrail .dot{transition:none}}
