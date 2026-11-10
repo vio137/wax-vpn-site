@@ -96,6 +96,10 @@
         <p>WARP client code is written to the wgcf-compatible protocol in Rust, strictly opt-in: nothing registers with Cloudflare until you ask it to. Live compatibility with the WARP service has not been tested yet.</p>
       </div>
     </div>
+    <figure class="shot shot-wide rv">
+      <img data-shot="disconnected" width="880" height="600" alt="waX VPN v0.1.9 on Windows: the Connect screen at rest, Disconnected, with the demo WireGuard profile selected" decoding="async">
+      <figcaption>The interface as it ships - v0.1.9 on Windows, Connect rail at rest with the demo profile selected. Real capture from the v0.1.9 verification gate, not a mockup.</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -130,6 +134,28 @@
         <div class="spec-row"><span class="spec-idx">04</span><div><h3>System tray<span class="tag live">In v0.1.0</span></h3><p>Close to the tray and keep the tunnel running - exercised in the CI GUI leg. The tray menu and Quit are not verified yet. Start with Windows saves only after a registry readback, warning and reverting on failure.</p></div></div>
         <div class="spec-row"><span class="spec-idx">05</span><div><h3>WARP profiles<span class="tag plan">Opt-in</span></h3><p>Register and manage Cloudflare WARP profiles inside the app, wgcf-style. Off until you turn it on. Not yet exercised live against Cloudflare.</p></div></div>
       </div>
+    </div>
+    <div class="shot-grid rv">
+      <figure class="shot">
+        <img data-shot="connected" width="880" height="600" alt="waX VPN v0.1.9 Connected state during the CI gate, with live session time and byte counters after a real handshake" decoding="async">
+        <figcaption>v0.1.9 Connected - captured during the CI gate, session counters live after a real GUI-click handshake.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="profiles" width="880" height="600" alt="waX VPN v0.1.9 Profiles screen: the demo profile with select, connect and delete actions, split-tunneling exclusions, and config import" decoding="async">
+        <figcaption>v0.1.9 Profiles - import, select and split-tunnel exclusions for the demo profile.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="features" width="880" height="600" alt="waX VPN v0.1.9 Features screen: Start with Windows, Auto-reconnect and Reduced motion toggles, running with administrator rights" decoding="async">
+        <figcaption>v0.1.9 Features - Start with Windows, Auto-reconnect and Reduced motion, as toggles stand in this build.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="warp" width="880" height="600" alt="waX VPN v0.1.9 WARP screen: registration gated behind an unchecked terms-of-service box, not registered" decoding="async">
+        <figcaption>v0.1.9 WARP - strictly opt-in: nothing registers until the terms box is checked. Live WARP compatibility is still untested.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="about" width="880" height="600" alt="waX VPN v0.1.9 About screen: version card, local-only diagnostics report button, and build facts (Rust core, egui interface, MIT license)" decoding="async">
+        <figcaption>v0.1.9 About - build facts and the local-only diagnostics report. Nothing is uploaded.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -206,6 +232,20 @@
       </div>
       <a class="btn" href="https://github.com/vio137/wax-vpn/releases/tag/v0.1.9" target="_blank" rel="noopener">Get the release</a>
     </div>
+    <div class="shot-grid rv">
+      <figure class="shot">
+        <img data-shot="settings_load_warning" width="880" height="600" alt="waX VPN v0.1.9 showing the settings load warning banner: saved settings could not be read and were kept unchanged, Auto-reconnect off for this session" decoding="async">
+        <figcaption>v0.1.9 - an unreadable settings file is kept unchanged, Auto-reconnect is off for that session, and this warning says so.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="settings_save_warning" width="880" height="600" alt="waX VPN v0.1.9 showing the settings save warning banner on the Features screen: settings could not be saved, current choices may not be restored next launch" decoding="async">
+        <figcaption>v0.1.9 - a failed settings save warns instead of failing silently. Tested failures preserve the previous data; no power-loss guarantee.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img data-shot="installed" width="880" height="600" alt="waX VPN v0.1.9 first launch after a fresh NSIS install on the CI runner: no profile selected yet, Connect button disabled" decoding="async">
+        <figcaption>v0.1.9 - first launch after a fresh install on the CI runner: no profile yet, Connect disabled until one is imported.</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -247,5 +287,6 @@
   <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6.5 9H3v6h3.5L11 19z"/><path class="w1" d="M15 9.5a4 4 0 0 1 0 5"/><path class="w2" d="M17.5 7a8 8 0 0 1 0 10"/><line class="off" x1="15" y1="9" x2="21" y2="15"/><line class="off" x1="21" y1="9" x2="15" y2="15"/></svg>
 </button>
 <script src="app.js"></script>
+<script src="shots.js" defer></script>
 </body>
 </html>
