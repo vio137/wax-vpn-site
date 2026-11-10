@@ -238,3 +238,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .jrail a:focus-visible .lbl{opacity:1;transform:none;color:var(--cyan)}
 @media(max-width:900px){.jrail{display:none}}
 @media(prefers-reduced-motion:reduce){.jrail .lbl,.jrail .dot{transition:none}}
+
+/* real product screenshots (v0.1.9 gate captures) */
+.shot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:52px}
+#status .shot-grid{margin-top:26px}
+.shot{margin:0;border:1px solid rgba(120,150,190,.16);border-radius:14px;overflow:hidden;background:rgba(10,15,26,.6)}
+.shot img{display:block;width:100%;height:auto;aspect-ratio:22/15;background:#0d1117;opacity:0;transition:opacity .6s ease}
+.shot img.on{opacity:1}
+.shot figcaption{padding:11px 14px;font-size:12.5px;line-height:1.55;color:var(--mut,#9aa7bd);border-top:1px solid rgba(120,150,190,.14)}
+.shot-wide{max-width:880px;margin:52px auto 0}
+@media(max-width:640px){.shot-grid{grid-template-columns:1fr;gap:14px}.shot figcaption{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.shot img{transition:none}}
