@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://waxvpn.pages.dev/sitemap.xml
