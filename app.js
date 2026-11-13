@@ -74,6 +74,7 @@
   try { await navigator.clipboard.writeText(hash.value); status.textContent='Copied the full checksum.'; }
   catch { hash.focus();hash.select(); status.textContent='Select and copy the checksum above.'; }
  });
+ $$('.feature-row,.story,.spec-strip>.container>div').forEach(c=>c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px');}));
  // Abstract geometry only. No counters or points represent measured network data.
  const canvas = $('#tunnel');
  if(!canvas) return;
@@ -81,7 +82,7 @@
  if(!ctx) return;
  let w=1,h=1,dpr=1,frame=0,visible=true,t=0,last=0;
  let pointerX=0,pointerY=0;
- const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+ const accent = '#62e4ff';
  const resize = () => { const r=canvas.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(paused)drawOnce(); };
  const project = (x,y,z) => {
   const ry=.42+pointerX*.4+Math.sin(t*.3)*.25, rx=.65+pointerY*.3+Math.sin(t*.22)*.18;
@@ -97,16 +98,16 @@
   for(let ring=0;ring<20;ring++){
    const v=ring/20*Math.PI*2 + t*.09; const points=[];
    for(let i=0;i<=150;i++) points.push(torus(i/150*Math.PI*2,v));
-   line(points,.14+(.5+.5*Math.sin(v))*.26,ring%5===0?1.1:.55);
+   line(points,.25+(.5+.5*Math.sin(v))*.45,ring%5===0?1.5:.7);
   }
   for(let ring=0;ring<56;ring++){
    const u=ring/56*Math.PI*2+t*.025;const points=[];
    for(let i=0;i<=26;i++)points.push(torus(u,i/26*Math.PI*2));
-   line(points,.2,.65);
+   line(points,.32,.8);
   }
   for(let i=0;i<18;i++){
    const u=t*.12+i*2.399,v=i*.9+t*.2;const p=torus(u,v);
-   ctx.globalAlpha=.4+(Math.sin(t+i)+1)*.22;ctx.fillStyle=accent;ctx.beginPath();ctx.arc(p[0],p[1],i%3===0?2.3:1.3,0,Math.PI*2);ctx.fill();
+   ctx.globalAlpha=.7+(Math.sin(t+i)+1)*.15;ctx.fillStyle=i%2?'#ff6bd6':'#fff';ctx.beginPath();ctx.arc(p[0],p[1],i%3===0?2.3:1.3,0,Math.PI*2);ctx.fill();
   }
   ctx.globalAlpha=1;
  }
