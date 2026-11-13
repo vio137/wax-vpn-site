@@ -1,0 +1,25 @@
+{
+  "name": "wax-vpn-site",
+  "version": "1.0.0",
+  "description": "waX VPN static website",
+  "main": "app.js",
+  "scripts": {
+    "test": "node tests/browser.cjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vio137/wax-vpn-site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vio137/wax-vpn-site/issues"
+  },
+  "homepage": "https://github.com/vio137/wax-vpn-site#readme",
+  "devDependencies": {
+    "playwright": "^1.65.0",
+    "puppeteer-core": "^25.17.0"
+  },
+  "private": true
+}
