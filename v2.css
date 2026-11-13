@@ -117,3 +117,10 @@ dialog{border-radius:12px}
 @media(max-width:760px){.gallery-tabs{overflow-x:auto;scroll-snap-type:x proximity;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:36px;scrollbar-width:none}.gallery-tabs::-webkit-scrollbar{display:none}.gallery-tabs button{scroll-snap-align:start;flex:0 0 auto}}
 @media(min-width:761px){.hero-shot{translate:0 var(--py,0px)}}
 @media(min-width:1100px){.history-main>ul{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}.history-main>ul>li{margin-bottom:0}}
+.log-filter{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:24px}
+.log-filter label{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.log-filter input{flex:1 1 260px;max-width:420px;background:var(--paper2);border:1px solid var(--rule);border-radius:8px;color:var(--ink);font:inherit;font-size:15px;padding:11px 14px}
+.log-filter input:focus{border-color:var(--accent);outline:none}
+.log-filter span{font-family:var(--font-mono);font-size:12px;color:var(--accent)}
+.history-main>ul>li[hidden]{display:none}
+@media(min-width:1100px){.history-main>ul{margin-top:16px}}
