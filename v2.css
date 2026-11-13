@@ -130,3 +130,5 @@ dialog{border-radius:12px}
 .footer-top>div{gap:14px 36px}
 .footer-top>div a{font-size:15px;color:#cfd9ea;transition:color .2s ease}
 .footer-top>div a:hover{color:var(--accent)}
+@media print{body{background:#fff;color:#111}.nav,.hero-art,.motion-toggle,.progress,.gallery-tabs,.log-filter,.footer-word,canvas{display:none!important}*{box-shadow:none!important;color:#111!important;background:transparent!important;border-color:#bbb!important}a{text-decoration:underline}.hero{min-height:0}.js-motion .reveal{opacity:1!important;transform:none!important}details>*{display:block!important}.history-main>ul{display:block!important}#sha{border:1px solid #888}}
+@media print{.skip,.menu,.mobile-nav,.system-map,.shot-open .enlarge{display:none!important}h1{font-size:44px!important}h2{font-size:30px!important}.hero,.system-layout,.download-top,.section-head,.faq-section,.feature-list{display:block!important}.hero-shot{position:static!important;translate:none!important}}
