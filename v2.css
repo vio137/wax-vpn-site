@@ -160,3 +160,4 @@ dialog{border-radius:12px}
 .log-filter input{max-width:none;flex:1 1 260px}.log-filter{border-bottom:1px solid var(--rule);padding-bottom:24px;margin-bottom:8px}@media print{.log-filter{display:none!important}}
 @media(max-width:380px){.hero-meta{gap:6px 18px}.hero-meta span{border:0!important;padding:0!important;margin:0!important}}
 @media(max-width:480px){.enlarge{font-size:0!important;padding:6px 10px!important;gap:0!important}.enlarge>span{font-size:18px;line-height:1}.download-offer .text-link{margin-left:0!important;padding-left:0!important;align-self:flex-start}}
+@media(min-width:700px) and (max-width:980px){.art-caption{left:auto!important;right:2%!important;bottom:-8px!important}}
