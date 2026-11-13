@@ -161,3 +161,4 @@ dialog{border-radius:12px}
 @media(max-width:380px){.hero-meta{gap:6px 18px}.hero-meta span{border:0!important;padding:0!important;margin:0!important}}
 @media(max-width:480px){.enlarge{font-size:0!important;padding:6px 10px!important;gap:0!important}.enlarge>span{font-size:18px;line-height:1}.download-offer .text-link{margin-left:0!important;padding-left:0!important;align-self:flex-start}}
 @media(min-width:780px) and (max-width:900px){.art-caption{left:auto!important;right:2%!important;top:488px!important;bottom:auto!important}}
+@media(max-width:900px){.mini-profile b{display:none}}
