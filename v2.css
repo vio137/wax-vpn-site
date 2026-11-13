@@ -156,3 +156,4 @@ dialog{border-radius:12px}
 @media print{.mini-tray{display:none!important}}
 .checksum{align-items:end!important}.checksum .button{height:44px}#copy-status:empty{display:none}
 .checksum #sha,.checksum .button{height:46px;box-sizing:border-box}
+.checksum #sha{height:52px!important}.checksum .button{height:52px!important;min-height:0!important;padding-block:0!important}
