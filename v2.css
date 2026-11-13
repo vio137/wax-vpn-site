@@ -91,3 +91,6 @@ dialog{border-radius:12px}
 @media(min-width:761px){.art-caption{top:8px;bottom:auto;left:2%}}
 @media(min-width:761px){.hero-art canvas{top:0;height:90%}.hero-shot{top:38%;left:16%}}
 @media(min-width:761px){.art-caption{top:40px;left:0}}
+.faq-lead{position:sticky;top:130px;align-self:start}.faq-lead h2{position:static;margin-bottom:24px}.faq-lead p{font-size:16px;max-width:30ch}.faq-lead a{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+@media(max-width:760px){.faq-lead{position:static}}
+.screen-panel{padding:24px}.shot-open img{max-width:960px}
