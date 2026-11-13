@@ -87,8 +87,8 @@
   const ry=.42+pointerX*.4+Math.sin(t*.3)*.25, rx=.65+pointerY*.3+Math.sin(t*.22)*.18;
   const a=x*Math.cos(ry)+z*Math.sin(ry), b=-x*Math.sin(ry)+z*Math.cos(ry);
   const c=y*Math.cos(rx)-b*Math.sin(rx), depth=y*Math.sin(rx)+b*Math.cos(rx);
-  const scale=w*.36/(1+depth*.21);
-  return [w*.52+a*scale,h*.37+c*scale,depth];
+  const scale=w*.27/(1+depth*.21);
+  return [w*.52+a*scale,h*.33+c*scale,depth];
  };
  function torus(u,v){const radius=1+.22*Math.cos(v);return project(radius*Math.cos(u),radius*Math.sin(u),.22*Math.sin(v));}
  function line(points,alpha,width=1){ctx.globalAlpha=alpha;ctx.strokeStyle=accent;ctx.lineWidth=width;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();}

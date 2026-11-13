@@ -87,3 +87,7 @@ dialog{border-radius:12px}
 @media(max-width:760px){.hero{padding-block:28px 48px}.motion-toggle{top:auto;bottom:30px;left:0;right:auto}.art-caption{left:0;bottom:0}.hero-art{height:380px}.section,.feature-band,.download-section{padding-block:56px}.system-map{height:400px}.story,.feature-row{padding:22px;min-height:0}.feature-row h3{font-size:25px}.version{font-size:44px}.spec-strip strong,.spec-strip a{font-size:14px}.hero-meta{flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){.js-motion .reveal{opacity:1;transform:none}}
 @media(min-width:761px){.hero-art canvas{top:4%;height:100%}.hero-shot{top:26%;left:6%}}
+@media(min-width:761px){.art-caption{bottom:-36px}.hero-shot figcaption{padding-bottom:12px}}
+@media(min-width:761px){.art-caption{top:8px;bottom:auto;left:2%}}
+@media(min-width:761px){.hero-art canvas{top:0;height:90%}.hero-shot{top:38%;left:16%}}
+@media(min-width:761px){.art-caption{top:40px;left:0}}
