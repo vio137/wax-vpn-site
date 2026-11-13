@@ -31,3 +31,4 @@ html{scrollbar-color:var(--rule) var(--paper)}input{caret-color:var(--accent)}
 @media(max-width:760px){.hero-art{overflow:clip}.hero-shot{left:0;top:18%}.motion-toggle{left:0;bottom:30px}.art-caption{left:0;bottom:0}.hero-art canvas{width:100%;left:0;height:110%;top:-12%}}
 .motion-toggle{top:0;right:0;bottom:auto;left:auto}
 @media(max-width:760px){.motion-toggle{top:12px;right:0;bottom:auto;left:auto}.orbit-label{top:-16px}}
+@media(max-width:760px){h1{font-size:clamp(50px,15.8vw,90px)}}
