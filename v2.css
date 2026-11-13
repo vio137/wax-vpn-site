@@ -100,3 +100,5 @@ dialog{border-radius:12px}
 .feature-row>.mini-profile{width:100%;align-self:stretch}.mini-profile i{height:12px}
 .feature-row>.mini-tray{align-self:stretch;width:100%;gap:14px}
 .feature-row>.mini-connect{align-self:flex-start;width:72px;height:72px}
+.js-motion .story.reveal.in-view:not(.is-active){opacity:.62}.js-motion .story{transition:opacity .3s,border-color .3s}.js-motion .story.is-active{border-color:rgba(92,200,255,.55)}.story.is-active .index{color:#fff}
+.node.active strong{color:var(--accent)}

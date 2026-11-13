@@ -27,7 +27,7 @@
   }
  }, {threshold: .2});
  $$('.reveal').forEach(e => observer.observe(e));
- function activateNode(name) { $$('.node').forEach(e => e.classList.toggle('active', e.dataset.node === name)); }
+ function activateNode(name) { $$('.node').forEach(e => e.classList.toggle('active', e.dataset.node === name)); $$('.story').forEach(e => e.classList.toggle('is-active', e.dataset.scene === name)); }
  $$('.node').forEach(e => {
   e.addEventListener('pointerenter', () => activateNode(e.dataset.node));
   e.addEventListener('focus', () => activateNode(e.dataset.node));
