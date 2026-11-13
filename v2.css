@@ -157,3 +157,4 @@ dialog{border-radius:12px}
 .checksum{align-items:end!important}.checksum .button{height:44px}#copy-status:empty{display:none}
 .checksum #sha,.checksum .button{height:46px;box-sizing:border-box}
 .checksum #sha{height:52px!important}.checksum .button{height:52px!important;min-height:0!important;padding-block:0!important}
+.log-filter input{max-width:none;flex:1 1 260px}.log-filter{border-bottom:1px solid var(--rule);padding-bottom:24px;margin-bottom:8px}@media print{.log-filter{display:none!important}}
