@@ -137,3 +137,7 @@ dialog{border-radius:12px}
 @media(max-width:760px){.motion-toggle{top:auto!important;bottom:-44px!important;left:0!important;right:auto!important;padding:8px 12px;font-size:13px}.hero-art{margin-bottom:56px;overflow:visible!important}.hero-art canvas{clip-path:inset(0)}}
 @media(max-width:760px){.faq-section .faq{margin-top:4px!important}.faq-lead p{max-width:none}}
 .node strong{white-space:nowrap}@media(min-width:761px) and (max-width:1000px){.node strong{font-size:14px}.node{padding-inline:6px}.hero{min-height:0}}
+@media(min-width:761px) and (max-width:1000px){.hero{padding-block:48px 56px}.hero-art{height:560px}.art-caption{top:auto!important;bottom:-8px!important;left:0!important}}
+@media(min-width:1001px){.art-caption{top:auto!important;bottom:-4px!important;left:0!important}}
+@media(min-width:1001px){.art-caption{bottom:-44px!important;left:auto!important;right:0!important}}
+@media(min-width:1001px){.art-caption{top:calc(100% + 26px)!important;bottom:auto!important}}
