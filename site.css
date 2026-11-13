@@ -26,3 +26,6 @@ html{scrollbar-color:var(--rule) var(--paper)}input{caret-color:var(--accent)}
 @media(max-width:760px){.hero-art{overflow-clip-margin:0}.hero-shot figcaption{font-size:11px}.art-caption{font-size:11px}.orbit-label{font-size:11px}.spec-strip span{font-size:11px}.screen-panel figcaption{font-size:11px}.enlarge{font-size:11px}}
 
 @media(max-width:760px){.art-caption{bottom:0}.motion-toggle{bottom:30px}}
+
+.hero-art{overflow:visible}.hero-art canvas{width:100%;left:0;top:-5%;height:105%}.hero-shot{left:6%;right:0;top:18%}.motion-toggle{left:6%;bottom:-4px}.art-caption{left:6%;bottom:-30px}
+@media(max-width:760px){.hero-art{overflow:clip}.hero-shot{left:0;top:18%}.motion-toggle{left:0;bottom:30px}.art-caption{left:0;bottom:0}.hero-art canvas{width:100%;left:0;height:110%;top:-12%}}
