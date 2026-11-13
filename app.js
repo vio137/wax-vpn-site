@@ -84,7 +84,7 @@
  const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
  const resize = () => { const r=canvas.getBoundingClientRect();w=r.width;h=r.height;dpr=Math.min(devicePixelRatio,2);canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);if(paused)drawOnce(); };
  const project = (x,y,z) => {
-  const ry=.42+pointerX*.2+Math.sin(t*.26)*.18, rx=.65+pointerY*.17+Math.sin(t*.18)*.12;
+  const ry=.42+pointerX*.4+Math.sin(t*.3)*.25, rx=.65+pointerY*.3+Math.sin(t*.22)*.18;
   const a=x*Math.cos(ry)+z*Math.sin(ry), b=-x*Math.sin(ry)+z*Math.cos(ry);
   const c=y*Math.cos(rx)-b*Math.sin(rx), depth=y*Math.sin(rx)+b*Math.cos(rx);
   const scale=w*.36/(1+depth*.21);
@@ -97,16 +97,16 @@
   for(let ring=0;ring<20;ring++){
    const v=ring/20*Math.PI*2 + t*.09; const points=[];
    for(let i=0;i<=150;i++) points.push(torus(i/150*Math.PI*2,v));
-   line(points,.08+(.5+.5*Math.sin(v))*.16,ring%5===0?1.1:.55);
+   line(points,.14+(.5+.5*Math.sin(v))*.26,ring%5===0?1.1:.55);
   }
   for(let ring=0;ring<56;ring++){
    const u=ring/56*Math.PI*2+t*.025;const points=[];
    for(let i=0;i<=26;i++)points.push(torus(u,i/26*Math.PI*2));
-   line(points,.12,.55);
+   line(points,.2,.65);
   }
   for(let i=0;i<18;i++){
    const u=t*.12+i*2.399,v=i*.9+t*.2;const p=torus(u,v);
-   ctx.globalAlpha=.4+(Math.sin(t+i)+1)*.22;ctx.fillStyle=accent;ctx.beginPath();ctx.arc(p[0],p[1],i%3===0?1.8:1.1,0,Math.PI*2);ctx.fill();
+   ctx.globalAlpha=.4+(Math.sin(t+i)+1)*.22;ctx.fillStyle=accent;ctx.beginPath();ctx.arc(p[0],p[1],i%3===0?2.3:1.3,0,Math.PI*2);ctx.fill();
   }
   ctx.globalAlpha=1;
  }
