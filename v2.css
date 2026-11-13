@@ -95,3 +95,4 @@ dialog{border-radius:12px}
 .screen-panel{padding:24px}.shot-open img{max-width:960px}
 @media(max-width:760px){.motion-toggle{top:-8px;bottom:auto;left:auto;right:0}.node strong{font-size:12px;letter-spacing:-.04em}.node{padding-inline:2px}.art-caption{bottom:-4px}.hero-art{margin-bottom:12px}}
 .history-main>ul>li{font-size:15px;color:#c2cee2}.history-main li time{font-family:var(--font-mono);font-size:12px}
+@media(max-width:360px){h1{font-size:54px}h2{font-size:36px}.download-top h2{font-size:52px}}
