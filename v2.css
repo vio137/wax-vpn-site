@@ -154,3 +154,5 @@ dialog{border-radius:12px}
 .mini-tray i:nth-of-type(1){border-color:var(--accent)}
 @media(max-width:760px){.mini-tray::after{content:"illustration"}}
 @media print{.mini-tray{display:none!important}}
+.checksum{align-items:end!important}.checksum .button{height:44px}#copy-status:empty{display:none}
+.checksum #sha,.checksum .button{height:46px;box-sizing:border-box}
