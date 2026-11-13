@@ -93,3 +93,4 @@ dialog{border-radius:12px}
 .faq-lead{position:sticky;top:130px;align-self:start}.faq-lead h2{position:static;margin-bottom:24px}.faq-lead p{font-size:16px;max-width:30ch}.faq-lead a{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
 @media(max-width:760px){.faq-lead{position:static}}
 .screen-panel{padding:24px}.shot-open img{max-width:960px}
+@media(max-width:760px){.motion-toggle{top:-8px;bottom:auto;left:auto;right:0}.node strong{font-size:12px;letter-spacing:-.04em}.node{padding-inline:2px}.art-caption{bottom:-4px}.hero-art{margin-bottom:12px}}
