@@ -94,12 +94,12 @@
  function line(points,alpha,width=1){ctx.globalAlpha=alpha;ctx.strokeStyle=accent;ctx.lineWidth=width;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();}
  function paint(){
   ctx.clearRect(0,0,w,h);
-  for(let ring=0;ring<20;ring++){
+  const lite=w<500;for(let ring=0;ring<(lite?12:20);ring++){
    const v=ring/20*Math.PI*2 + t*.09; const points=[];
    for(let i=0;i<=150;i++) points.push(torus(i/150*Math.PI*2,v));
    line(points,.25+(.5+.5*Math.sin(v))*.45,ring%5===0?1.5:.7);
   }
-  for(let ring=0;ring<56;ring++){
+  for(let ring=0;ring<(lite?30:56);ring++){
    const u=ring/56*Math.PI*2+t*.025;const points=[];
    for(let i=0;i<=26;i++)points.push(torus(u,i/26*Math.PI*2));
    line(points,.32,.8);
