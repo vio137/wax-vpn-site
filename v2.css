@@ -142,3 +142,9 @@ dialog{border-radius:12px}
 @media(min-width:1001px){.art-caption{bottom:-44px!important;left:auto!important;right:0!important}}
 @media(min-width:1001px){.art-caption{top:calc(100% + 26px)!important;bottom:auto!important}}
 @media(min-width:1001px){.art-caption{top:calc(100% + 62px)!important}}
+.mini-profile i{display:flex;align-items:center;height:26px!important;padding:0 10px;font:normal 12px/1 var(--font-mono);color:var(--muted)}
+.mini-profile i:nth-child(1)::before{content:"home-office"}
+.mini-profile i:nth-child(2)::before{content:"demo  /  active";color:var(--ink)}
+.mini-profile i:nth-child(3)::before{content:"travel"}
+.mini-profile b{top:-20px!important}
+@media print{.mini-profile{display:none!important}}
