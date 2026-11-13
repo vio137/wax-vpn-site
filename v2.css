@@ -162,3 +162,5 @@ dialog{border-radius:12px}
 @media(max-width:480px){.enlarge{font-size:0!important;padding:6px 10px!important;gap:0!important}.enlarge>span{font-size:18px;line-height:1}.download-offer .text-link{margin-left:0!important;padding-left:0!important;align-self:flex-start}}
 @media(min-width:780px) and (max-width:900px){.art-caption{left:auto!important;right:2%!important;top:488px!important;bottom:auto!important}}
 @media(max-width:900px){.mini-profile b{display:none}}
+@media(max-width:900px){.download-offer .text-link{margin-left:0!important;padding-left:0!important;align-self:flex-start}}
+@media(max-width:900px){.download-offer .text-link{display:block!important;width:max-content;margin-top:14px!important}}
