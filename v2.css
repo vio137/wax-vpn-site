@@ -181,3 +181,6 @@ dialog{border-radius:12px}
 
 /* digits line up in version, size and date strings */
 .spec-strip strong,.hero-meta,.version,.history-main li time,.history-current,.screen-panel figcaption{font-variant-numeric:tabular-nums}
+
+/* tabs: hovered label brightens, selected one keeps the accent */
+.gallery-tabs button:not([aria-selected=true]):hover{color:#fff}
