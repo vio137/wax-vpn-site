@@ -169,3 +169,4 @@ dialog{border-radius:12px}
 .mini-profile b{display:none}
 .feature-row>.mini-wave{align-self:flex-start!important}
 @media(min-width:900px){.footer-word{font-size:min(21.5vw,310px);white-space:nowrap}}
+.log-filter span:empty{display:none}
