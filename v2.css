@@ -173,3 +173,4 @@ dialog{border-radius:12px}
 @media(max-width:760px){.gallery-tabs{padding-left:24px;scroll-padding-left:24px}}
 .history-main>ul>li{overflow-wrap:anywhere}
 @media(max-width:760px){.download-section pre,.faq pre,details pre{white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:visible}}
+@media(max-width:760px){.footer-top>div a,.text-link,.history-current a,.motion-toggle{display:inline-flex;align-items:center;min-height:44px}.footer-top>div{gap:0 24px}}
