@@ -168,3 +168,4 @@ dialog{border-radius:12px}
 @media(max-width:600px){#close-lightbox{padding:8px 14px!important;min-height:44px;font-size:14px!important}dialog p{font-size:13px}}
 .mini-profile b{display:none}
 .feature-row>.mini-wave{align-self:flex-start!important}
+@media(min-width:900px){.footer-word{font-size:min(20.5vw,300px);white-space:nowrap}}
