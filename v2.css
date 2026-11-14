@@ -192,3 +192,7 @@ dialog{border-radius:12px}
 details{transition:border-color .2s}
 @media (hover:hover){details:not([open]):hover{border-color:rgba(92,200,255,.45)}}
 
+
+/* swipes inside the lightbox or tab row do not drag the page along */
+dialog{overscroll-behavior:contain}
+.gallery-tabs{overscroll-behavior-x:contain}
