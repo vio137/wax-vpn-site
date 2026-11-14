@@ -166,3 +166,4 @@ dialog{border-radius:12px}
 @media(max-width:900px){.download-offer .text-link{display:block!important;width:max-content;margin-top:14px!important}}
 .history-main li time{margin-bottom:6px!important}.history-main>ul>li>time+*{margin-top:0!important}
 @media(max-width:600px){#close-lightbox{padding:8px 14px!important;min-height:44px;font-size:14px!important}dialog p{font-size:13px}}
+.mini-profile b{display:none}
