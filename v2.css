@@ -176,3 +176,7 @@ dialog{border-radius:12px}
 @media(max-width:760px){.footer-top>div a,.text-link,.history-current a,.motion-toggle{display:inline-flex;align-items:center;min-height:44px}.footer-top>div{gap:0 24px}}
 @media(max-width:899px){.footer-word{font-size:21.4vw;white-space:nowrap}}@media(max-width:480px){.footer-word{font-size:20.3vw}}
 @media(max-width:760px){.nav .mobile-nav{gap:0 24px;padding-block:8px 12px}.nav .mobile-nav a{display:flex;align-items:center;min-height:48px;font-size:16px;color:#dfe7f3}.nav .mobile-nav a:last-child{color:var(--accent)}}
+
+/* anchors land below the sticky header */
+section[id]{scroll-margin-top:84px}
+@media (max-width:760px){section[id]{scroll-margin-top:68px}}
