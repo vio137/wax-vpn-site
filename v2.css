@@ -201,3 +201,6 @@ dialog{overscroll-behavior:contain}
 .checksum textarea{width:100%;min-width:0;display:block;resize:none;overflow:hidden;font-family:var(--font-mono);font-size:12px;line-height:1.6;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:14px;color:var(--accent);overflow-wrap:anywhere;word-break:break-all;caret-color:var(--accent)}
 .checksum textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 @media (max-width:760px){.checksum #sha{height:auto!important;min-height:76px;field-sizing:content}}
+
+/* narrow phones: tighter card padding gives long log entries more line width */
+@media (max-width:400px){.history-main>ul>li{padding:20px 18px}}
