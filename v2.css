@@ -171,3 +171,4 @@ dialog{border-radius:12px}
 @media(min-width:900px){.footer-word{font-size:min(21.5vw,310px);white-space:nowrap}}
 .log-filter span:empty{display:none}
 @media(max-width:760px){.gallery-tabs{padding-left:24px;scroll-padding-left:24px}}
+.history-main>ul>li{overflow-wrap:anywhere}
