@@ -172,3 +172,4 @@ dialog{border-radius:12px}
 .log-filter span:empty{display:none}
 @media(max-width:760px){.gallery-tabs{padding-left:24px;scroll-padding-left:24px}}
 .history-main>ul>li{overflow-wrap:anywhere}
+@media(max-width:760px){.download-section pre,.faq pre,details pre{white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:visible}}
