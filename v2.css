@@ -196,3 +196,8 @@ details{transition:border-color .2s}
 /* swipes inside the lightbox or tab row do not drag the page along */
 dialog{overscroll-behavior:contain}
 .gallery-tabs{overscroll-behavior-x:contain}
+
+/* the checksum is a textarea so all 64 characters wrap and stay visible on phones */
+.checksum textarea{width:100%;min-width:0;display:block;resize:none;overflow:hidden;font-family:var(--font-mono);font-size:12px;line-height:1.6;background:var(--paper);border:1px solid var(--rule);border-radius:8px;padding:14px;color:var(--accent);overflow-wrap:anywhere;word-break:break-all;caret-color:var(--accent)}
+.checksum textarea:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+@media (max-width:760px){.checksum #sha{height:auto!important;min-height:76px;field-sizing:content}}
