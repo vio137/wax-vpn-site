@@ -191,3 +191,6 @@ dialog{border-radius:12px}
 /* accordion rows answer to hover like the feature cards do */
 details{transition:border-color .2s}
 @media (hover:hover){details:not([open]):hover{border-color:rgba(92,200,255,.45)}}
+
+/* opening the lightbox hides the page scrollbar, so reserve its space to stop the layout jumping */
+html{scrollbar-gutter:stable}
